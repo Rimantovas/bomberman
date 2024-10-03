@@ -1,8 +1,9 @@
+import 'package:bomberman/game/bomb/explosion.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
-import '../game.dart';
-import '../utils/app_asset.dart';
+import '../../game.dart';
+import '../../utils/app_asset.dart';
 
 enum BombType { regular, remote, laser }
 
@@ -32,9 +33,32 @@ abstract class Bomb extends SpriteAnimationComponent
   void explode() {
     List<Vector2> explosionTiles = _createExplosionTiles();
     for (var tile in explosionTiles) {
-      gameRef.createExplosion(tile);
+      _createExplosion(tile);
     }
     gameRef.remove(this);
+  }
+
+  void _createExplosion(Vector2 position) {
+    final explosion = Explosion(position: position);
+    add(explosion);
+
+    Vector2 gridPos = explosion.getGridPosition(BombermanGame.tileSize);
+    int x = gridPos.x.toInt();
+    int y = gridPos.y.toInt();
+
+    if (y >= 0 &&
+        y < gameRef.grid.length &&
+        x >= 0 &&
+        x < gameRef.grid[0].length) {
+      if (gameRef.grid[y][x] != null && gameRef.grid[y][x]!.canBeDestroyed()) {
+        remove(gameRef.grid[y][x]!);
+        gameRef.grid[y][x] = null;
+      }
+    }
+
+    if (gameRef.player.toRect().overlaps(explosion.toRect())) {
+      print('Player hit by explosion!');
+    }
   }
 
   List<Vector2> _createExplosionTiles() {

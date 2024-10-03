@@ -1,3 +1,4 @@
+import 'package:bomberman/menu/menu_screen.dart';
 import 'package:bomberman/utils/app_asset.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const GameScreen(),
+      home: const MainMenu(),
     );
   }
 }

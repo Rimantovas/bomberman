@@ -18,4 +18,6 @@ class AppAsset {
   static String destroyableBox = item('box');
   static String bedrockWall = terrain('wall');
   static String rockWall = terrain('rock');
+
+  static String menuBackground = 'assets/images/menu_bg.png';
 }

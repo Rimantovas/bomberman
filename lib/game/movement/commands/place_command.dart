@@ -1,5 +1,5 @@
-import 'package:bomberman/movement/commands/command.dart';
-import 'package:bomberman/player/player.dart';
+import 'package:bomberman/game/movement/commands/command.dart';
+import 'package:bomberman/game/player/player.dart';
 
 class PlaceBombCommand implements Command {
   @override

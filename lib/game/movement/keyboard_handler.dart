@@ -1,7 +1,7 @@
-import 'package:bomberman/movement/commands/command.dart';
-import 'package:bomberman/movement/commands/move_command.dart';
-import 'package:bomberman/movement/commands/place_command.dart';
-import 'package:bomberman/player/player.dart';
+import 'package:bomberman/game/movement/commands/command.dart';
+import 'package:bomberman/game/movement/commands/move_command.dart';
+import 'package:bomberman/game/movement/commands/place_command.dart';
+import 'package:bomberman/game/player/player.dart';
 import 'package:flutter/services.dart';
 
 class AppKeyboardHandler {

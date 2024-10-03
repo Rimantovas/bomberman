@@ -4,11 +4,10 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'board_object/board_object.dart';
-import 'bomb/explosion.dart';
-import 'map/map_builder.dart';
-import 'movement/keyboard_handler.dart';
-import 'player/player.dart';
+import 'game/board_object/board_object.dart';
+import 'game/map/map_builder.dart';
+import 'game/movement/keyboard_handler.dart';
+import 'game/player/player.dart';
 
 class BombermanGame extends FlameGame
     with HasCollisionDetection, KeyboardEvents {
@@ -64,26 +63,6 @@ class BombermanGame extends FlameGame
     add(player);
 
     keyboardHandler = AppKeyboardHandler(player);
-  }
-
-  void createExplosion(Vector2 position) {
-    final explosion = Explosion(position: position);
-    add(explosion);
-
-    Vector2 gridPos = explosion.getGridPosition(tileSize);
-    int x = gridPos.x.toInt();
-    int y = gridPos.y.toInt();
-
-    if (y >= 0 && y < grid.length && x >= 0 && x < grid[0].length) {
-      if (grid[y][x] != null && grid[y][x]!.canBeDestroyed()) {
-        remove(grid[y][x]!);
-        grid[y][x] = null;
-      }
-    }
-
-    if (player.toRect().overlaps(explosion.toRect())) {
-      print('Player hit by explosion!');
-    }
   }
 
   @override
