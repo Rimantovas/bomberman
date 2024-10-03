@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 
-import '../app_asset.dart';
+import '../utils/app_asset.dart';
 import 'board_object.dart';
 
 class Destroyable extends BoardObject with HasGameRef {

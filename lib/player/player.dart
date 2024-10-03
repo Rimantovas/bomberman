@@ -2,10 +2,10 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
-import '../app_asset.dart';
-import '../factories/bomb_factory.dart';
-import 'board_object.dart';
-import 'bomb.dart';
+import '../board_object/board_object.dart';
+import '../bomb/bomb.dart';
+import '../bomb/bomb_factory.dart';
+import '../utils/app_asset.dart';
 
 enum MovingState { still, up, down, right, left }
 

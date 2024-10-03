@@ -1,8 +1,8 @@
-import 'package:bomberman/game/app_asset.dart';
+import 'package:bomberman/utils/app_asset.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import 'game/bomberman_game.dart';
+import 'game.dart';
 
 void main() {
   runApp(const MyApp());

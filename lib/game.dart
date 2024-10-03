@@ -4,11 +4,11 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'input/keyboard_handler.dart';
-import 'map_builder.dart';
-import 'objects/board_object.dart';
-import 'objects/explosion.dart';
-import 'objects/player.dart';
+import 'board_object/board_object.dart';
+import 'bomb/explosion.dart';
+import 'map/map_builder.dart';
+import 'movement/keyboard_handler.dart';
+import 'player/player.dart';
 
 class BombermanGame extends FlameGame
     with HasCollisionDetection, KeyboardEvents {

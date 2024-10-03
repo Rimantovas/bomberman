@@ -1,28 +1,8 @@
+import 'package:bomberman/movement/commands/command.dart';
+import 'package:bomberman/movement/commands/move_command.dart';
+import 'package:bomberman/movement/commands/place_command.dart';
+import 'package:bomberman/player/player.dart';
 import 'package:flutter/services.dart';
-
-import '../objects/player.dart';
-
-abstract class Command {
-  void execute(Player player);
-}
-
-class MoveCommand implements Command {
-  final MovingState state;
-
-  MoveCommand(this.state);
-
-  @override
-  void execute(Player player) {
-    player.setState(state);
-  }
-}
-
-class PlaceBombCommand implements Command {
-  @override
-  void execute(Player player) {
-    player.placeBomb();
-  }
-}
 
 class AppKeyboardHandler {
   final Player player;

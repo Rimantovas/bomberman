@@ -1,8 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
-import '../app_asset.dart';
-import '../bomberman_game.dart';
+import '../game.dart';
+import '../utils/app_asset.dart';
 
 enum BombType { regular, remote, laser }
 

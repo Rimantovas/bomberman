@@ -1,8 +1,8 @@
 import 'package:flame/components.dart';
 
-import 'objects/bedrock.dart';
-import 'objects/board_object.dart';
-import 'objects/destroyable.dart';
+import '../board_object/bedrock.dart';
+import '../board_object/board_object.dart';
+import '../board_object/destroyable.dart';
 
 class MapBuilder {
   final int tileSize;

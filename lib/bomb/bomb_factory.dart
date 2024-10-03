@@ -1,7 +1,7 @@
 import 'package:flame/game.dart';
 
-import '../objects/bomb.dart';
-import '../objects/regular_bomb.dart';
+import 'bomb.dart';
+import 'regular_bomb.dart';
 
 class BombFactory {
   static Bomb createBomb(BombType type, {required Vector2 position}) {
