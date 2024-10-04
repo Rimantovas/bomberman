@@ -1,3 +1,4 @@
+import 'package:bomberman/game.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player_animation_strategy.dart';
 import 'package:flame/collisions.dart';
@@ -8,7 +9,7 @@ import '../bomb/bomb.dart';
 import '../bomb/bomb_factory.dart';
 
 class Player extends SpriteAnimationComponent
-    with HasGameRef, CollisionCallbacks {
+    with HasGameRef<BombermanGame>, CollisionCallbacks {
   final String id;
   static const double _speed = 100.0;
   final Vector2 velocity = Vector2.zero();
@@ -56,6 +57,10 @@ class Player extends SpriteAnimationComponent
         break;
     }
     position.add(velocity * dt);
+    final newPos = position.clone()..add(velocity * dt);
+    if (newPos != position) {
+      gameRef.updateMyPosition(newPos);
+    }
   }
 
   void _updateAnimation() {

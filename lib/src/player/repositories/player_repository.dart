@@ -13,7 +13,7 @@ class PlayerRepository {
 
   Future<void> move(PlayerMoveRequest request) async {
     final response =
-        await dio.post('$kPlayersPath$kMovePath', data: request.toJson());
+        await dio.patch('$kPlayersPath$kMovePath', data: request.toMap());
 
     if (response.statusCode! > 300) {
       throw Exception(response.statusMessage);
@@ -21,14 +21,23 @@ class PlayerRepository {
   }
 
   Stream<List<PlayerModel>> getPlayersStream(String sessionId) {
-    return _firestore
-        .collection(kPlayersPath)
-        .where('session_id', isEqualTo: sessionId)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => PlayerModelMapper.fromMap(doc.data()))
-              .toList(),
-        );
+    print('GET PLAYERS STREAM $sessionId');
+    try {
+      return _firestore
+          .collection(kPlayersCollection)
+          .where('session_id', isEqualTo: sessionId)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => PlayerModelMapper.fromMap({
+                      ...doc.data(),
+                      'id': doc.id,
+                    }))
+                .toList(),
+          );
+    } catch (e) {
+      print('ERROR GETTING PLAYERS STREAM $e');
+      return Stream.value([]);
+    }
   }
 }

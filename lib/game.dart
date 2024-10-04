@@ -39,6 +39,7 @@ class BombermanGame extends FlameGame
       children: [
         FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
           onNewState: (state) {
+            print('onNewState ${state.otherPlayers.length}');
             // Update game state based on other players
             updateOtherPlayers(state.otherPlayers);
           },
@@ -73,7 +74,7 @@ class BombermanGame extends FlameGame
 
     final myPlayer = Player(
       id: myPlayerId,
-      position: Vector2(64, 64),
+      position: Vector2(32, 32),
     );
     await playerManager.setMyPlayer(myPlayer);
 
@@ -128,5 +129,9 @@ class BombermanGame extends FlameGame
   // Method to update other player's position
   void updatePlayerPosition(String id, Vector2 newPosition) {
     playerManager.updatePlayerPosition(id, newPosition);
+  }
+
+  void updateMyPosition(Vector2 newPosition) {
+    playerManagerBloc.updateMyPosition(newPosition);
   }
 }
