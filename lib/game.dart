@@ -1,68 +1,93 @@
-import 'package:flame/components.dart';
+import 'dart:async';
+
+import 'package:bomberman/game/map/game_map.dart';
+import 'package:bomberman/game/movement/keyboard_handler.dart';
+import 'package:bomberman/game/player/player.dart';
+import 'package:bomberman/game/player/player_manager.dart';
+import 'package:bomberman/src/player/bloc/player_manager_bloc.dart';
+import 'package:bomberman/src/player/models/player.dart';
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame/input.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'game/board_object/board_object.dart';
-import 'game/map/map_builder.dart';
-import 'game/movement/keyboard_handler.dart';
-import 'game/player/player.dart';
+List<String> asciiMap = [
+  "###############",
+  "#P           P#",
+  "# D D D D D D #",
+  "#  ###   ###  #",
+  "# D D D D D D #",
+  "#  ###   ###  #",
+  "# D D D D D D #",
+  "#  ###   ###  #",
+  "# D D D D D D #",
+  "#P           P#",
+  "###############",
+];
 
 class BombermanGame extends FlameGame
-    with HasCollisionDetection, KeyboardEvents {
-  static const int tileSize = 32;
-  static const int mapWidth = 15;
-  static const int mapHeight = 11;
+    with KeyboardEvents, HasCollisionDetection {
+  BombermanGame({
+    required this.playerId,
+    required this.sessionId,
+  }) {
+    playerManagerBloc = PlayerManagerBloc(playerId);
 
-  static final Vector2 gameSize =
-      Vector2(mapWidth * tileSize.toDouble(), mapHeight * tileSize.toDouble());
+    add(FlameBlocProvider<PlayerManagerBloc, PlayerManagerState>.value(
+      value: playerManagerBloc,
+      children: [
+        FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
+          onNewState: (state) {
+            // Update game state based on other players
+            updateOtherPlayers(state.otherPlayers);
+          },
+        ),
+      ],
+    ));
+    playerManagerBloc.startListening(sessionId);
+  }
 
-  late Player player;
-  late List<List<BoardObject?>> grid;
-  late MapBuilder mapBuilder;
-  late AppKeyboardHandler keyboardHandler;
+  final String playerId;
+  final String sessionId;
+  late final PlayerManagerBloc playerManagerBloc;
 
-  BombermanGame()
-      : super(
-            camera: CameraComponent.withFixedResolution(
-                width: gameSize.x, height: gameSize.y));
+  late final PlayerManager playerManager;
+  late final GameMap gameMap;
+  late final AppKeyboardHandler keyboardHandler;
 
   @override
   Future<void> onLoad() async {
+    initializeGame(playerId);
     await super.onLoad();
+  }
 
-    List<String> asciiMap = [
-      "###############",
-      "#P            #",
-      "# D D D D D D #",
-      "#  ###   ###  #",
-      "# D D D D D D #",
-      "#  ###   ###  #",
-      "# D D D D D D #",
-      "#  ###   ###  #",
-      "# D D D D D D #",
-      "#             #",
-      "###############",
-    ];
-
-    mapBuilder = MapBuilder(tileSize: tileSize, asciiMap: asciiMap);
-    grid = List.generate(
-      asciiMap.length,
-      (y) => List.generate(asciiMap[0].length, (x) => null),
+  void initializeGame(String myPlayerId) {
+    // Initialize game map
+    gameMap = GameMap(
+      asciiMap: asciiMap,
     );
+    add(gameMap);
 
-    for (var object in mapBuilder.build()) {
-      add(object);
-      Vector2 gridPos = object.getGridPosition(tileSize);
-      grid[gridPos.y.toInt()][gridPos.x.toInt()] = object;
-    }
+    // Initialize player manager
+    playerManager = PlayerManager();
+    add(playerManager);
 
-    Vector2 playerPosition = Vector2(tileSize.toDouble(), tileSize.toDouble());
-    player = Player(position: playerPosition);
-    add(player);
+    // Create my player
+    final myPlayer = Player(
+      id: myPlayerId,
+      position: Vector2(64, 64),
+      // isMyPlayer: true,
+    );
+    playerManager.setMyPlayer(myPlayer);
 
-    keyboardHandler = AppKeyboardHandler(player);
+    keyboardHandler = AppKeyboardHandler(myPlayer);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    playerManager.update(dt);
   }
 
   @override
@@ -72,9 +97,40 @@ class BombermanGame extends FlameGame
   ) {
     final command = keyboardHandler.handleKeyEvent(event);
     if (command != null) {
-      command.execute(player);
+      command.execute(playerManager.myPlayer);
       return KeyEventResult.handled;
     }
     return KeyEventResult.handled;
+  }
+
+  void updateOtherPlayers(List<PlayerModel> otherPlayers) {
+    // Update other players in the game
+    for (final player in otherPlayers) {
+      if (playerManager.getPlayer(player.id) == null) {
+        playerManager.addOtherPlayer(player.id,
+            Vector2(player.positionX.toDouble(), player.positionY.toDouble()));
+      } else {
+        playerManager.updatePlayerPosition(player.id,
+            Vector2(player.positionX.toDouble(), player.positionY.toDouble()));
+      }
+    }
+
+    // Remove players that are no longer in the game
+    playerManager.removePlayersNotIn(otherPlayers.map((p) => p.id).toList());
+  }
+
+  // Method to add other players when they join
+  void addOtherPlayer(String id, Vector2 initialPosition) {
+    playerManager.addOtherPlayer(id, initialPosition);
+  }
+
+  // Method to remove a player when they leave
+  void removePlayer(String id) {
+    playerManager.removePlayer(id);
+  }
+
+  // Method to update other player's position
+  void updatePlayerPosition(String id, Vector2 newPosition) {
+    playerManager.updatePlayerPosition(id, newPosition);
   }
 }

@@ -1,9 +1,9 @@
+import 'package:bomberman/game.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
+import 'package:bomberman/game/map/game_map.dart';
+import 'package:bomberman/utils/app_asset.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-
-import '../../game.dart';
-import '../../utils/app_asset.dart';
 
 enum BombType { regular, remote, laser }
 
@@ -42,21 +42,22 @@ abstract class Bomb extends SpriteAnimationComponent
     final explosion = Explosion(position: position);
     add(explosion);
 
-    Vector2 gridPos = explosion.getGridPosition(BombermanGame.tileSize);
+    Vector2 gridPos = explosion.getGridPosition(GameMap.tileSize);
     int x = gridPos.x.toInt();
     int y = gridPos.y.toInt();
 
     if (y >= 0 &&
-        y < gameRef.grid.length &&
+        y < gameRef.gameMap.grid.length &&
         x >= 0 &&
-        x < gameRef.grid[0].length) {
-      if (gameRef.grid[y][x] != null && gameRef.grid[y][x]!.canBeDestroyed()) {
-        remove(gameRef.grid[y][x]!);
-        gameRef.grid[y][x] = null;
+        x < gameRef.gameMap.grid[0].length) {
+      if (gameRef.gameMap.grid[y][x] != null &&
+          gameRef.gameMap.grid[y][x]!.canBeDestroyed()) {
+        remove(gameRef.gameMap.grid[y][x]!);
+        gameRef.gameMap.grid[y][x] = null;
       }
     }
 
-    if (gameRef.player.toRect().overlaps(explosion.toRect())) {
+    if (gameRef.playerManager.myPlayer.toRect().overlaps(explosion.toRect())) {
       print('Player hit by explosion!');
     }
   }
@@ -73,16 +74,14 @@ abstract class Bomb extends SpriteAnimationComponent
     for (var direction in directions) {
       for (int i = 1; i <= strength; i++) {
         Vector2 newTile =
-            position + direction * (i * BombermanGame.tileSize).toDouble();
+            position + direction * (i * GameMap.tileSize).toDouble();
         tiles.add(newTile);
 
         // Add branching explosions
         if (i > 1 && branching > 1) {
           Vector2 perpendicularDir = Vector2(-direction.y, direction.x);
-          tiles.add(
-              newTile + perpendicularDir * BombermanGame.tileSize.toDouble());
-          tiles.add(
-              newTile - perpendicularDir * BombermanGame.tileSize.toDouble());
+          tiles.add(newTile + perpendicularDir * GameMap.tileSize.toDouble());
+          tiles.add(newTile - perpendicularDir * GameMap.tileSize.toDouble());
         }
       }
     }

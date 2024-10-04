@@ -1,11 +1,28 @@
+import 'package:bomberman/firebase_options.dart';
+import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/menu/menu_screen.dart';
+import 'package:bomberman/src/session/bloc/session_bloc.dart';
 import 'package:bomberman/utils/app_asset.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'game.dart';
 
-void main() {
+late final Dio dio;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://localhost:3000',
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -43,15 +60,31 @@ class GameScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: AspectRatio(
-                aspectRatio:
-                    BombermanGame.gameSize.x / BombermanGame.gameSize.y,
+                aspectRatio: GameMap.gameSize.x / GameMap.gameSize.y,
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: SizedBox(
-                    width: BombermanGame.gameSize.x,
-                    height: BombermanGame.gameSize.y,
-                    child: GameWidget(
-                      game: BombermanGame(),
+                    width: GameMap.gameSize.x,
+                    height: GameMap.gameSize.y,
+                    child: BlocProvider(
+                      create: (context) => SessionBloc()..joinSession(),
+                      child: BlocBuilder<SessionBloc, SessionState>(
+                        builder: (context, state) {
+                          print('Player ID: ${state.playerId}');
+                          print('Session ID: ${state.sessionId}');
+                          if (state.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return GameWidget(
+                            game: BombermanGame(
+                              playerId: state.playerId!,
+                              sessionId: state.sessionId!,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

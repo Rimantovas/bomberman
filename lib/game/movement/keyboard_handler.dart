@@ -1,6 +1,7 @@
 import 'package:bomberman/game/movement/commands/command.dart';
 import 'package:bomberman/game/movement/commands/move_command.dart';
 import 'package:bomberman/game/movement/commands/place_command.dart';
+import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player.dart';
 import 'package:flutter/services.dart';
 

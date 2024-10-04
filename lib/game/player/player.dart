@@ -1,3 +1,4 @@
+import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
@@ -7,24 +8,23 @@ import '../board_object/board_object.dart';
 import '../bomb/bomb.dart';
 import '../bomb/bomb_factory.dart';
 
-enum MovingState { still, up, down, right, left }
-
 class Player extends SpriteAnimationComponent
     with HasGameRef, CollisionCallbacks {
+  final String id;
   static const double _speed = 100.0;
   final Vector2 velocity = Vector2.zero();
   late final Map<String, SpriteAnimation> _animations;
   String _currentDirection = 'front';
   MovingState _state = MovingState.still;
 
-  Player({required Vector2 position})
+  Player({required Vector2 position, required this.id})
       : super(position: position, size: Vector2(32, 32)) {
     add(RectangleHitbox());
   }
 
   @override
   Future<void> onLoad() async {
-    await super.onLoad();
+    super.onLoad();
     _animations = {
       'idle_front': await _loadAnimation(AppAsset.playerIdleFront, 4),
       'idle_back': await _loadAnimation(AppAsset.playerIdleBack, 4),

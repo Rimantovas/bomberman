@@ -1,4 +1,5 @@
 import 'package:bomberman/game/movement/commands/command.dart';
+import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player.dart';
 
 class MoveCommand implements Command {
