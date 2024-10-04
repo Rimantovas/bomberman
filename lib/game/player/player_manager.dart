@@ -4,20 +4,21 @@ import 'package:flame/components.dart';
 class PlayerManager extends Component {
   final Map<String, Player> _otherPlayers = {};
   late Player myPlayer;
+  bool _isLoaded = false;
 
-  void setMyPlayer(Player player) {
+  Future<void> setMyPlayer(Player player) async {
     myPlayer = player;
-    add(myPlayer);
+    await add(myPlayer);
+    _isLoaded = true;
   }
 
-  void addOtherPlayer(String id, Vector2 initialPosition) {
+  Future<void> addOtherPlayer(String id, Vector2 initialPosition) async {
     final player = Player(
       id: id,
       position: initialPosition,
-      // isMyPlayer: false,
     );
     _otherPlayers[id] = player;
-    add(player);
+    await add(player);
   }
 
   Player? getPlayer(String id) {
@@ -48,12 +49,18 @@ class PlayerManager extends Component {
 
   @override
   void update(double dt) {
+    if (!_isLoaded) return;
     super.update(dt);
-    // Update my player
     myPlayer.update(dt);
-    // Update other players if needed
     for (final player in _otherPlayers.values) {
       player.update(dt);
     }
+  }
+
+  Future<void> waitForPlayersToLoad() async {
+    await Future.wait([
+      myPlayer.loaded,
+      ..._otherPlayers.values.map((player) => player.loaded),
+    ]);
   }
 }

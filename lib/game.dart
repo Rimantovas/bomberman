@@ -58,28 +58,24 @@ class BombermanGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    initializeGame(playerId);
     await super.onLoad();
+    await initializeGame(playerId);
+    await playerManager.waitForPlayersToLoad();
   }
 
-  void initializeGame(String myPlayerId) {
-    // Initialize game map
-    gameMap = GameMap(
-      asciiMap: asciiMap,
-    );
-    add(gameMap);
+  Future<void> initializeGame(String myPlayerId) async {
+    gameMap = GameMap(asciiMap: asciiMap);
+    gameMap.init();
+    await add(gameMap);
 
-    // Initialize player manager
     playerManager = PlayerManager();
-    add(playerManager);
+    await add(playerManager);
 
-    // Create my player
     final myPlayer = Player(
       id: myPlayerId,
       position: Vector2(64, 64),
-      // isMyPlayer: true,
     );
-    playerManager.setMyPlayer(myPlayer);
+    await playerManager.setMyPlayer(myPlayer);
 
     keyboardHandler = AppKeyboardHandler(myPlayer);
   }

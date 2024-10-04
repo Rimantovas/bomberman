@@ -1,9 +1,8 @@
 import 'package:bomberman/game/movement/moving_state.dart';
+import 'package:bomberman/game/player/player_animation_strategy.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/sprite.dart';
 
-import '../../utils/app_asset.dart';
 import '../board_object/board_object.dart';
 import '../bomb/bomb.dart';
 import '../bomb/bomb_factory.dart';
@@ -13,38 +12,22 @@ class Player extends SpriteAnimationComponent
   final String id;
   static const double _speed = 100.0;
   final Vector2 velocity = Vector2.zero();
-  late final Map<String, SpriteAnimation> _animations;
+  late final PlayerAnimationStrategy animationStrategy;
   String _currentDirection = 'front';
+  String _currentAnimationName = 'idle_front';
   MovingState _state = MovingState.still;
 
   Player({required Vector2 position, required this.id})
       : super(position: position, size: Vector2(32, 32)) {
     add(RectangleHitbox());
+    animationStrategy = PlayerAnimationStrategy();
   }
 
   @override
   Future<void> onLoad() async {
-    super.onLoad();
-    _animations = {
-      'idle_front': await _loadAnimation(AppAsset.playerIdleFront, 4),
-      'idle_back': await _loadAnimation(AppAsset.playerIdleBack, 4),
-      'idle_left': await _loadAnimation(AppAsset.playerIdleLeft, 4),
-      'idle_right': await _loadAnimation(AppAsset.playerIdleRight, 4),
-      'walk_front': await _loadAnimation(AppAsset.playerWalkFront, 4),
-      'walk_back': await _loadAnimation(AppAsset.playerWalkBack, 4),
-      'walk_left': await _loadAnimation(AppAsset.playerWalkLeft, 4),
-      'walk_right': await _loadAnimation(AppAsset.playerWalkRight, 4),
-      'death': await _loadAnimation(AppAsset.playerDeathFront, 5),
-    };
-    animation = _animations['idle_front']!;
-  }
-
-  Future<SpriteAnimation> _loadAnimation(String asset, int amount) async {
-    final spriteSheet = SpriteSheet(
-      image: await gameRef.images.load(asset),
-      srcSize: Vector2(32, 32),
-    );
-    return spriteSheet.createAnimation(row: 0, stepTime: 0.1, to: amount);
+    await super.onLoad();
+    await animationStrategy.loadAnimations();
+    animation = animationStrategy.getAnimation(_currentAnimationName);
   }
 
   @override
@@ -76,20 +59,27 @@ class Player extends SpriteAnimationComponent
   }
 
   void _updateAnimation() {
-    final isMoving = !velocity.isZero();
-    final prefix = isMoving ? 'walk' : 'idle';
+    String newDirection = _currentDirection;
 
     if (velocity.x < 0) {
-      _currentDirection = 'left';
+      newDirection = 'left';
     } else if (velocity.x > 0) {
-      _currentDirection = 'right';
+      newDirection = 'right';
     } else if (velocity.y < 0) {
-      _currentDirection = 'back';
+      newDirection = 'back';
     } else if (velocity.y > 0) {
-      _currentDirection = 'front';
+      newDirection = 'front';
     }
 
-    animation = _animations['${prefix}_$_currentDirection']!;
+    final isMoving = !velocity.isZero();
+    final prefix = isMoving ? 'walk' : 'idle';
+    final newAnimationName = '${prefix}_$newDirection';
+
+    if (newAnimationName != _currentAnimationName) {
+      _currentDirection = newDirection;
+      _currentAnimationName = newAnimationName;
+      animation = animationStrategy.getAnimation(_currentAnimationName);
+    }
   }
 
   void setState(MovingState newState) {
