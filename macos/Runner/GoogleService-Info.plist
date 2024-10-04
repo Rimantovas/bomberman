@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBNuXePGA8v9vIAG2WOyoILIo_uk7la1iQ</string>
+	<string>AIzaSyCAYK6alcuJrKNs1_fMGLHfyXN0Q9AnfjY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>405739355445</string>
+	<string>357300625953</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.bomberman</string>
 	<key>PROJECT_ID</key>
-	<string>bomberman-8a1bf</string>
+	<string>bomberman-2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>bomberman-8a1bf.appspot.com</string>
+	<string>bomberman-2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:405739355445:ios:946cdf89e531aa9ec4607c</string>
+	<string>1:357300625953:ios:4f0f5f2a12e6ede17cb960</string>
 </dict>
 </plist>

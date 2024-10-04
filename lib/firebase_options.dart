@@ -50,21 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBNuXePGA8v9vIAG2WOyoILIo_uk7la1iQ',
-    appId: '1:405739355445:ios:946cdf89e531aa9ec4607c',
-    messagingSenderId: '405739355445',
-    projectId: 'bomberman-8a1bf',
-    storageBucket: 'bomberman-8a1bf.appspot.com',
+    apiKey: 'AIzaSyCAYK6alcuJrKNs1_fMGLHfyXN0Q9AnfjY',
+    appId: '1:357300625953:ios:4f0f5f2a12e6ede17cb960',
+    messagingSenderId: '357300625953',
+    projectId: 'bomberman-2',
+    storageBucket: 'bomberman-2.appspot.com',
     iosBundleId: 'com.example.bomberman',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyC_qZYPt4O1X96YeObK58ugiBlv6EeLY3Y',
-    appId: '1:405739355445:web:7043c72e38fae59ec4607c',
-    messagingSenderId: '405739355445',
-    projectId: 'bomberman-8a1bf',
-    authDomain: 'bomberman-8a1bf.firebaseapp.com',
-    storageBucket: 'bomberman-8a1bf.appspot.com',
-    measurementId: 'G-8MLH9MB6QZ',
+    apiKey: 'AIzaSyBVVqBDX8eWaqLiATYf3cKu0a3bpTSjttQ',
+    appId: '1:357300625953:web:219c5a821a8a178b7cb960',
+    messagingSenderId: '357300625953',
+    projectId: 'bomberman-2',
+    authDomain: 'bomberman-2.firebaseapp.com',
+    storageBucket: 'bomberman-2.appspot.com',
+    measurementId: 'G-R298TDVCDY',
   );
+
 }
