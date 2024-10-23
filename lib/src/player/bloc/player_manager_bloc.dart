@@ -23,17 +23,14 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState> {
         super(PlayerManagerState());
 
   void startListening(String sessionId) {
-    print('START LISTENING $sessionId');
     emit(PlayerManagerState(isLoading: true));
     _playerSubscription = _playerRepository.getPlayersStream(sessionId).listen(
       (players) {
-        print('STREAM LISTENING ${players.length}');
         final otherPlayers =
             players.where((player) => player.id != _myPlayerId).toList();
         emit(PlayerManagerState(otherPlayers: otherPlayers, isLoading: false));
       },
       onError: (error) {
-        print('STREAM ERROR $error');
         // Handle error
         emit(PlayerManagerState(isLoading: false));
       },

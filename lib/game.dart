@@ -39,7 +39,6 @@ class BombermanGame extends FlameGame
       children: [
         FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
           onNewState: (state) {
-            print('onNewState ${state.otherPlayers.length}');
             // Update game state based on other players
             updateOtherPlayers(state.otherPlayers);
           },

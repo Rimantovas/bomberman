@@ -25,10 +25,22 @@ class AppKeyboardHandler {
           return PlaceBombCommand();
       }
     } else if (event is KeyUpEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.keyW ||
-          event.logicalKey == LogicalKeyboardKey.keyS ||
-          event.logicalKey == LogicalKeyboardKey.keyA ||
-          event.logicalKey == LogicalKeyboardKey.keyD) {
+      // Check if another key is pressed, if so, do nothing
+
+      if (event.logicalKey == LogicalKeyboardKey.keyW &&
+          player.state == MovingState.up) {
+        return MoveCommand(MovingState.still);
+      }
+      if (event.logicalKey == LogicalKeyboardKey.keyS &&
+          player.state == MovingState.down) {
+        return MoveCommand(MovingState.still);
+      }
+      if (event.logicalKey == LogicalKeyboardKey.keyA &&
+          player.state == MovingState.left) {
+        return MoveCommand(MovingState.still);
+      }
+      if (event.logicalKey == LogicalKeyboardKey.keyD &&
+          player.state == MovingState.right) {
         return MoveCommand(MovingState.still);
       }
     }

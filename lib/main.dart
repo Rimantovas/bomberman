@@ -70,8 +70,6 @@ class GameScreen extends StatelessWidget {
                       create: (context) => SessionBloc()..joinSession(),
                       child: BlocBuilder<SessionBloc, SessionState>(
                         builder: (context, state) {
-                          print('Player ID: ${state.playerId}');
-                          print('Session ID: ${state.sessionId}');
                           if (state.isLoading) {
                             return const Center(
                               child: CircularProgressIndicator(),

@@ -21,7 +21,6 @@ class PlayerRepository {
   }
 
   Stream<List<PlayerModel>> getPlayersStream(String sessionId) {
-    print('GET PLAYERS STREAM $sessionId');
     try {
       return _firestore
           .collection(kPlayersCollection)

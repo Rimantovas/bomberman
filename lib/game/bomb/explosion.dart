@@ -1,30 +1,18 @@
 import 'dart:math' as math;
 
-import 'package:flame/components.dart';
+import 'package:bomberman/game/bomb/timed_effect.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-class Explosion extends PositionComponent {
-  static const double _duration = 0.5;
-  double _timeAlive = 0;
-
-  Explosion({required Vector2 position})
-      : super(position: position, size: Vector2(32, 32));
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    _timeAlive += dt;
-    if (_timeAlive >= _duration) {
-      removeFromParent();
-    }
-  }
+class Explosion extends TimedEffect {
+  Explosion({required super.position}) : super(duration: 0.5);
 
   @override
   void render(Canvas canvas) {
     final rect = size.toRect();
     final paint = Paint()
       ..color =
-          Colors.orange.withOpacity(math.max(0, 1 - (_timeAlive / _duration)));
+          Colors.orange.withOpacity(math.max(0, 1 - (timeAlive / duration)));
     canvas.drawRect(rect, paint);
   }
 

@@ -31,9 +31,6 @@ class SessionBloc extends Cubit<SessionState> {
       final SessionJoinResponse response =
           await _sessionRepository.joinSession();
 
-      print('Session ID1: ${response.sessionId}');
-      print('Player ID1: ${response.playerId}');
-
       emit(SessionState(
         sessionId: response.sessionId,
         playerId: response.playerId,

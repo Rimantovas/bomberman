@@ -9,12 +9,6 @@ class SessionRepository {
   Future<SessionJoinResponse> joinSession() async {
     final response = await dio.post('$kSessionPath$kJoinPath');
 
-    print(response.data);
-
-    print(response.statusCode);
-
-    print(response.statusMessage);
-
     if (response.statusCode! > 300) {
       throw Exception(response.statusMessage);
     }
