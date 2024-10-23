@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^5.4.4
   flame_bloc: ^1.12.1
   flutter_bloc: ^8.1.6
+  socket_io_client: ^3.0.0
 
 dev_dependencies:
   flutter_test:

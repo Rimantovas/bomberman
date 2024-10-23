@@ -31,6 +31,7 @@ class BombermanGame extends FlameGame
   BombermanGame({
     required this.playerId,
     required this.sessionId,
+    required this.initialPlayers,
   }) {
     playerManagerBloc = PlayerManagerBloc(playerId);
 
@@ -39,17 +40,19 @@ class BombermanGame extends FlameGame
       children: [
         FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
           onNewState: (state) {
+            print('other players: ${state.otherPlayers.length}');
             // Update game state based on other players
             updateOtherPlayers(state.otherPlayers);
           },
         ),
       ],
     ));
-    playerManagerBloc.startListening(sessionId);
+    playerManagerBloc.startListening(initialPlayers);
   }
 
   final String playerId;
   final String sessionId;
+  final List<PlayerModel> initialPlayers;
   late final PlayerManagerBloc playerManagerBloc;
 
   late final PlayerManager playerManager;
@@ -111,7 +114,6 @@ class BombermanGame extends FlameGame
       }
     }
 
-    // Remove players that are no longer in the game
     playerManager.removePlayersNotIn(otherPlayers.map((p) => p.id).toList());
   }
 

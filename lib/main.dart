@@ -79,6 +79,7 @@ class GameScreen extends StatelessWidget {
                             game: BombermanGame(
                               playerId: state.playerId!,
                               sessionId: state.sessionId!,
+                              initialPlayers: state.initialPlayers,
                             ),
                           );
                         },

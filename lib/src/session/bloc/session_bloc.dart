@@ -1,4 +1,6 @@
+import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/main.dart';
+import 'package:bomberman/src/player/models/player.dart';
 import 'package:bomberman/src/session/models/session_join_response.dart';
 import 'package:bomberman/src/session/repositories/session_repository.dart';
 import 'package:bomberman/utils/interceptor.dart';
@@ -8,8 +10,13 @@ class SessionState {
   final String? sessionId;
   final String? playerId;
   final bool isLoading;
+  final List<PlayerModel> initialPlayers;
 
-  SessionState({this.sessionId, this.playerId, this.isLoading = true});
+  SessionState(
+      {this.sessionId,
+      this.playerId,
+      this.isLoading = true,
+      this.initialPlayers = const []});
 }
 
 class SessionBloc extends Cubit<SessionState> {
@@ -34,6 +41,7 @@ class SessionBloc extends Cubit<SessionState> {
       emit(SessionState(
         sessionId: response.sessionId,
         playerId: response.playerId,
+        initialPlayers: response.players,
         isLoading: false,
       ));
 

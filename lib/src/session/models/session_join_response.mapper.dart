@@ -13,6 +13,7 @@ class SessionJoinResponseMapper extends ClassMapperBase<SessionJoinResponse> {
   static SessionJoinResponseMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SessionJoinResponseMapper._());
+      PlayerModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -26,15 +27,20 @@ class SessionJoinResponseMapper extends ClassMapperBase<SessionJoinResponse> {
   static String _$playerId(SessionJoinResponse v) => v.playerId;
   static const Field<SessionJoinResponse, String> _f$playerId =
       Field('playerId', _$playerId, key: 'player_id');
+  static List<PlayerModel> _$players(SessionJoinResponse v) => v.players;
+  static const Field<SessionJoinResponse, List<PlayerModel>> _f$players =
+      Field('players', _$players);
 
   @override
   final MappableFields<SessionJoinResponse> fields = const {
     #sessionId: _f$sessionId,
     #playerId: _f$playerId,
+    #players: _f$players,
   };
 
   static SessionJoinResponse _instantiate(DecodingData data) {
-    return SessionJoinResponse(data.dec(_f$sessionId), data.dec(_f$playerId));
+    return SessionJoinResponse(
+        data.dec(_f$sessionId), data.dec(_f$playerId), data.dec(_f$players));
   }
 
   @override
@@ -92,7 +98,9 @@ extension SessionJoinResponseValueCopy<$R, $Out>
 
 abstract class SessionJoinResponseCopyWith<$R, $In extends SessionJoinResponse,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? sessionId, String? playerId});
+  ListCopyWith<$R, PlayerModel,
+      PlayerModelCopyWith<$R, PlayerModel, PlayerModel>> get players;
+  $R call({String? sessionId, String? playerId, List<PlayerModel>? players});
   SessionJoinResponseCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -106,14 +114,22 @@ class _SessionJoinResponseCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SessionJoinResponse> $mapper =
       SessionJoinResponseMapper.ensureInitialized();
   @override
-  $R call({String? sessionId, String? playerId}) => $apply(FieldCopyWithData({
+  ListCopyWith<$R, PlayerModel,
+          PlayerModelCopyWith<$R, PlayerModel, PlayerModel>>
+      get players => ListCopyWith($value.players,
+          (v, t) => v.copyWith.$chain(t), (v) => call(players: v));
+  @override
+  $R call({String? sessionId, String? playerId, List<PlayerModel>? players}) =>
+      $apply(FieldCopyWithData({
         if (sessionId != null) #sessionId: sessionId,
-        if (playerId != null) #playerId: playerId
+        if (playerId != null) #playerId: playerId,
+        if (players != null) #players: players
       }));
   @override
   SessionJoinResponse $make(CopyWithData data) => SessionJoinResponse(
       data.get(#sessionId, or: $value.sessionId),
-      data.get(#playerId, or: $value.playerId));
+      data.get(#playerId, or: $value.playerId),
+      data.get(#players, or: $value.players));
 
   @override
   SessionJoinResponseCopyWith<$R2, SessionJoinResponse, $Out2>

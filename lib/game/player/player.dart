@@ -92,6 +92,10 @@ class Player extends SpriteAnimationComponent
     }
 
     position.add(velocity * dt);
+    final newPos = position.clone()..add(velocity * dt);
+    if (newPos != position) {
+      gameRef.updateMyPosition(newPos);
+    }
   }
 
   void _updateAnimation() {
@@ -159,14 +163,10 @@ class Player extends SpriteAnimationComponent
       } else if (_state == MovingState.left &&
           other.position.x < position.x &&
           other.position.y == position.y) {
-        print(
-            'setting last collision position left ${other.position.x} ${position.x}');
         lastCollisionPosition = other.position.clone();
       } else if (_state == MovingState.right &&
           other.position.x > position.x &&
           other.position.y == position.y) {
-        print(
-            'setting last collision position right ${other.position.x} ${position.x}');
         lastCollisionPosition = other.position.clone();
       }
 
