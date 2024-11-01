@@ -1,30 +1,30 @@
 import 'package:bomberman/game.dart';
-import 'package:bomberman/utils/app_asset.dart';
+import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/components.dart';
-import 'package:flame/sprite.dart';
 
 enum BombType { regular, remote, laser }
 
 abstract class Bomb extends SpriteAnimationComponent
     with HasGameRef<BombermanGame> {
-  final int strength;
-  final int branching;
+  final int primaryModifier;
+  final int secondaryModifier;
   final double explosionDelay;
+  final ColorScheme colorScheme;
 
   Bomb({
-    required this.strength,
-    required this.branching,
+    required this.primaryModifier,
+    required this.secondaryModifier,
     required this.explosionDelay,
     required Vector2 position,
+    required this.colorScheme,
   }) : super(position: position, size: Vector2(32, 32));
+
+  String get spritePath;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    final spriteSheet = SpriteSheet(
-      image: await gameRef.images.load(AppAsset.bombDynamite),
-      srcSize: Vector2(32, 32),
-    );
+    final spriteSheet = await colorScheme.getSprite(spritePath);
     animation = spriteSheet.createAnimation(row: 0, stepTime: 0.1, to: 3);
   }
 

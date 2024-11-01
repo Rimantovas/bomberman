@@ -11,4 +11,9 @@ class MoveCommand implements Command {
   void execute(Player player) {
     player.setState(state);
   }
+
+  @override
+  void undo(Player player) {
+    // TODO: implement undo
+  }
 }

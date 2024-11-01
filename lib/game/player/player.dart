@@ -2,6 +2,7 @@ import 'package:bomberman/game.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player_animation_strategy.dart';
+import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -12,6 +13,7 @@ import '../bomb/bomb_factory.dart';
 class Player extends SpriteAnimationComponent
     with HasGameRef<BombermanGame>, CollisionCallbacks {
   final String id;
+  final ColorImplementor colorImplementor;
   static const double _speed = 100.0;
   final Vector2 velocity = Vector2.zero();
   late final PlayerAnimationStrategy animationStrategy;
@@ -21,10 +23,15 @@ class Player extends SpriteAnimationComponent
 
   Vector2? lastCollisionPosition;
 
-  Player({required Vector2 position, required this.id})
-      : super(position: position, size: Vector2(32, 32)) {
+  Player({
+    required Vector2 position,
+    required this.id,
+    required this.colorImplementor,
+  }) : super(position: position, size: Vector2(32, 32)) {
     add(RectangleHitbox());
-    animationStrategy = PlayerAnimationStrategy();
+    animationStrategy = PlayerAnimationStrategy(
+      colorScheme: PlayerColorScheme(colorImplementor),
+    );
   }
 
   @override
@@ -129,8 +136,13 @@ class Player extends SpriteAnimationComponent
   MovingState get state => _state;
 
   void placeBomb() {
-    final bomb =
-        BombFactory.createBomb(BombType.regular, position: position.clone());
+    final bomb = BombFactory.createBomb(
+      BombType.regular,
+      position: position.clone(),
+      colorScheme: BombColorScheme(colorImplementor),
+      primaryModifier: 0,
+      secondaryModifier: 0,
+    );
     gameRef.add(bomb);
 
     gameRef.add(

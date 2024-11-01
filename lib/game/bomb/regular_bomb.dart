@@ -3,15 +3,24 @@ import 'dart:math';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
 import 'package:bomberman/game/map/game_map.dart';
+import 'package:bomberman/utils/app_asset.dart';
 import 'package:flame/components.dart';
 
 class RegularBomb extends Bomb {
   RegularBomb({
-    super.strength = 3,
-    super.branching = 1,
+    required super.primaryModifier,
+    required super.secondaryModifier,
+    required super.colorScheme,
     super.explosionDelay = 3.0,
     required super.position,
-  });
+  })  : strength = primaryModifier * 3,
+        branching = secondaryModifier * 1;
+
+  final int strength;
+  final int branching;
+
+  @override
+  String get spritePath => AppAsset.bombDynamite;
 
   @override
   void execute() {

@@ -4,6 +4,7 @@ import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/movement/keyboard_handler.dart';
 import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/game/player/player_manager.dart';
+import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:bomberman/src/player/bloc/player_manager_bloc.dart';
 import 'package:bomberman/src/player/models/player.dart';
 import 'package:flame/events.dart';
@@ -77,6 +78,7 @@ class BombermanGame extends FlameGame
     final myPlayer = Player(
       id: myPlayerId,
       position: Vector2(32, 32),
+      colorImplementor: BlueColorImplementor(),
     );
     await playerManager.setMyPlayer(myPlayer);
 

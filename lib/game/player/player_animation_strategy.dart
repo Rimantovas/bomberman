@@ -1,11 +1,14 @@
+import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
-import 'package:flame/sprite.dart';
 
 import '../../utils/app_asset.dart';
 
 class PlayerAnimationStrategy {
   late final Map<String, SpriteAnimation> animations;
+
+  final ColorScheme colorScheme;
+
+  PlayerAnimationStrategy({required this.colorScheme});
 
   Future<void> loadAnimations() async {
     animations = {
@@ -22,10 +25,7 @@ class PlayerAnimationStrategy {
   }
 
   Future<SpriteAnimation> _loadAnimation(String asset, int amount) async {
-    final spriteSheet = SpriteSheet(
-      image: await Flame.images.load(asset),
-      srcSize: Vector2(32, 32),
-    );
+    final spriteSheet = await colorScheme.getSprite(asset);
     return spriteSheet.createAnimation(row: 0, stepTime: 0.1, to: amount);
   }
 

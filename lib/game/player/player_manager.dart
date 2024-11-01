@@ -1,4 +1,5 @@
 import 'package:bomberman/game/player/player.dart';
+import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/components.dart';
 
 class PlayerManager extends Component {
@@ -16,6 +17,7 @@ class PlayerManager extends Component {
     final player = Player(
       id: id,
       position: initialPosition,
+      colorImplementor: BlueColorImplementor(),
     );
     _otherPlayers[id] = player;
     await add(player);
