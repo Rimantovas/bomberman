@@ -1,12 +1,13 @@
+import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/board_object/board_object.dart';
-import 'package:bomberman/game/map/game_start_map_builder.dart';
-import 'package:bomberman/game/map/normal_game_map_builder.dart';
+import 'package:bomberman/game/map/map_builder.dart';
 import 'package:flame/components.dart';
 
 class GameMap extends Component {
   final List<String> asciiMap;
+  final GameTheme theme;
 
-  GameMap({required this.asciiMap});
+  GameMap({required this.asciiMap, required this.theme});
 
   static const int tileSize = 32;
   static const int mapWidth = 15;
@@ -20,7 +21,8 @@ class GameMap extends Component {
 
   void initStart() {
     final mapBuilder =
-        GameStartMapBuilder(tileSize: tileSize, asciiMap: asciiMap);
+        GameStartMapBuilder(tileSize: tileSize, asciiMap: asciiMap)
+          ..setTheme(theme);
 
     final map = mapBuilder.build();
     final objects = map.objects;
@@ -44,7 +46,8 @@ class GameMap extends Component {
     }
     startComponents.clear();
     final mapBuilder =
-        NormalGameMapBuilder(tileSize: tileSize, asciiMap: asciiMap);
+        NormalGameMapBuilder(tileSize: tileSize, asciiMap: asciiMap)
+          ..setTheme(theme);
     final map = mapBuilder.build();
     final objects = map.objects;
     grid = List.generate(

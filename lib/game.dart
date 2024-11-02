@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/movement/keyboard_handler.dart';
 import 'package:bomberman/game/player/player.dart';
@@ -68,7 +69,8 @@ class BombermanGame extends FlameGame
   }
 
   Future<void> initializeGame(String myPlayerId) async {
-    gameMap = GameMap(asciiMap: asciiMap);
+    gameMap =
+        GameMap(asciiMap: asciiMap, theme: GameTheme.retro); //todo change theme
     gameMap.initStart();
     await add(gameMap);
 

@@ -1,0 +1,1 @@
+enum GameTheme { retro, comic }
