@@ -11,6 +11,10 @@ abstract class BoardObject extends SpriteComponent with CollisionCallbacks {
     return false;
   }
 
+  bool canBeWalkedOn() {
+    return false;
+  }
+
   Vector2 getGridPosition(int tileSize) {
     return Vector2(
       (position.x / tileSize).floor().toDouble(),

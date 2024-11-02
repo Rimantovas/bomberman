@@ -160,6 +160,10 @@ class Player extends SpriteAnimationComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is BoardObject) {
+      if (other.canBeWalkedOn()) {
+        return;
+      }
+
       /// Before setting the last collision position, check if it is in the direction of where the player is moving
       /// For the logic, check if other.position.y is for example more than player position.y and moving state is down
       /// Then we don't want to set the last collision position

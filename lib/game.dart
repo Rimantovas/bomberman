@@ -69,7 +69,7 @@ class BombermanGame extends FlameGame
 
   Future<void> initializeGame(String myPlayerId) async {
     gameMap = GameMap(asciiMap: asciiMap);
-    gameMap.init();
+    gameMap.initStart();
     await add(gameMap);
 
     playerManager = PlayerManager();
