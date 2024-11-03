@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
 import 'package:bomberman/game/map/game_map.dart';
@@ -47,10 +48,14 @@ class RegularBomb extends Bomb {
         y < gameRef.gameMap.grid.length &&
         x >= 0 &&
         x < gameRef.gameMap.grid[0].length) {
-      if (gameRef.gameMap.grid[y][x] != null &&
-          gameRef.gameMap.grid[y][x]!.canBeDestroyed()) {
-        gameRef.gameMap.remove(gameRef.gameMap.grid[y][x]!);
-        gameRef.gameMap.grid[y][x] = null;
+      final boardObject = gameRef.gameMap.grid[y][x];
+      if (boardObject != null && boardObject.canBeDestroyed()) {
+        if (boardObject is Destroyable) {
+          boardObject.executeDestruction(gameRef, y, x);
+        } else {
+          gameRef.gameMap.remove(gameRef.gameMap.grid[y][x]!);
+          gameRef.gameMap.grid[y][x] = null;
+        }
       }
     }
 

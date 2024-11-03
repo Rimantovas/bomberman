@@ -24,7 +24,9 @@ class ComicThemeBoardObjectFactory implements BoardObjectFactory {
   }
 
   @override
-  BoardObject createDestroyable(Vector2 position) {
+  BoardObject createDestroyable(
+    Vector2 position,
+  ) {
     return ComicThemeDestroyable(position: position);
   }
 }

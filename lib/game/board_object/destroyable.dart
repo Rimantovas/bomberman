@@ -1,10 +1,26 @@
+import 'package:bomberman/game.dart';
+import 'package:bomberman/game/board_object/destruction_strategy.dart';
 import 'package:flame/components.dart';
 
 import '../../utils/app_asset.dart';
 import 'board_object.dart';
 
+//* [PATTERN] Has Strategy Pattern
 abstract class Destroyable extends BoardObject with HasGameRef {
-  Destroyable({required super.position}) : super(size: Vector2(32, 32));
+  Destroyable({
+    required super.position,
+  }) : super(size: Vector2(32, 32));
+
+  DestructionStrategy? destructionStrategy = DefaultDestructionStrategy();
+
+  void setDestructionStrategy(DestructionStrategy destructionStrategy) {
+    this.destructionStrategy = destructionStrategy;
+  }
+
+  void executeDestruction(BombermanGame gameRef, int gridY, int gridX) {
+    destructionStrategy?.destroy(position, gameRef, gridY, gridX);
+    destructionStrategy = null;
+  }
 
   @override
   bool canBeDestroyed() {

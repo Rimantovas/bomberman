@@ -1,5 +1,7 @@
 import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/board_object/board_object_factory.dart';
+import 'package:bomberman/game/board_object/destroyable.dart';
+import 'package:bomberman/game/board_object/destruction_strategy.dart';
 import 'package:bomberman/game/map/map.dart';
 import 'package:flame/components.dart';
 
@@ -29,7 +31,11 @@ class MapBuilder {
               objects.add(_boardObjectFactory.createGround(position));
               break;
             case 'D':
-              objects.add(_boardObjectFactory.createDestroyable(position));
+              final destroyable =
+                  _boardObjectFactory.createDestroyable(position);
+              (destroyable as Destroyable)
+                  .setDestructionStrategy(getRandomDestructionStrategy());
+              objects.add(destroyable);
               break;
             case '#':
               objects.add(_boardObjectFactory.createBedrock(position));

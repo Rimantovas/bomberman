@@ -79,6 +79,27 @@ class BlueColorImplementor implements ColorImplementor {
   }
 }
 
+class BlackColorImplementor implements ColorImplementor {
+  @override
+  Future<SpriteSheet> tintSprite(String assetPath) async {
+    final image = await Flame.images.load(assetPath);
+    final spriteSheet = SpriteSheet(
+      image: image,
+      srcSize: Vector2(32, 32),
+    );
+
+    final sprites = spriteSheet.sprites;
+    for (final sprite in sprites) {
+      sprite.paint.colorFilter = ColorFilter.mode(
+        Colors.black.withOpacity(0.5),
+        BlendMode.srcATop,
+      );
+    }
+
+    return spriteSheet;
+  }
+}
+
 extension SpriteSheetExtension on SpriteSheet {
   List<Sprite> get sprites {
     final rows = this.rows;
