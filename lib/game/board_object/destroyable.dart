@@ -5,8 +5,14 @@ import 'package:flame/components.dart';
 import '../../utils/app_asset.dart';
 import 'board_object.dart';
 
+//* [PATTERN] Prototype Pattern
+mixin Prototype<T> {
+  T clone();
+}
+
 //* [PATTERN] Has Strategy Pattern
-abstract class Destroyable extends BoardObject with HasGameRef {
+abstract class Destroyable extends BoardObject
+    with HasGameRef, Prototype<Destroyable> {
   Destroyable({
     required super.position,
   }) : super(size: Vector2(32, 32));
@@ -38,6 +44,11 @@ class ComicThemeDestroyable extends Destroyable {
       srcSize: Vector2(32, 32),
     );
   }
+
+  @override
+  Destroyable clone() {
+    return ComicThemeDestroyable(position: Vector2(position.x, position.y));
+  }
 }
 
 class RetroThemeDestroyable extends Destroyable {
@@ -49,5 +60,10 @@ class RetroThemeDestroyable extends Destroyable {
       AppAsset.destroyableBox, //todo change to retro theme
       srcSize: Vector2(32, 32),
     );
+  }
+
+  @override
+  Destroyable clone() {
+    return RetroThemeDestroyable(position: Vector2(position.x, position.y));
   }
 }

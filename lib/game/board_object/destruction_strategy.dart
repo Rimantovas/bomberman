@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game.dart';
 import 'package:bomberman/game/board_object/board_object_factory.dart';
+import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/bomb_factory.dart';
 import 'package:bomberman/game/rendering/color_scheme.dart';
@@ -87,6 +88,8 @@ class DestroyableAppearDestructionStrategy implements DestructionStrategy {
     int gridY,
     int gridX,
   ) {
+    final boardObject = gameRef.gameMap.grid[gridY][gridX];
+    final clonedDestroyable = (boardObject! as Destroyable).clone();
     gameRef.gameMap.remove(gameRef.gameMap.grid[gridY][gridX]!);
     gameRef.gameMap.grid[gridY][gridX] = null;
 
@@ -94,14 +97,8 @@ class DestroyableAppearDestructionStrategy implements DestructionStrategy {
       TimerComponent(
         period: 500,
         onTick: () {
-          final theme = gameRef.gameMap.theme;
-          final boardObjectFactory = switch (theme) {
-            GameTheme.comic => ComicThemeBoardObjectFactory(),
-            GameTheme.retro => RetroThemeBoardObjectFactory(),
-          };
-          final destroyable = boardObjectFactory.createDestroyable(position);
-          gameRef.add(destroyable);
-          gameRef.gameMap.grid[gridY][gridX] = destroyable;
+          gameRef.add(clonedDestroyable);
+          gameRef.gameMap.grid[gridY][gridX] = clonedDestroyable;
         },
       ),
     );
