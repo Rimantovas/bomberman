@@ -1,8 +1,4 @@
-import 'dart:math';
-
-import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game.dart';
-import 'package:bomberman/game/board_object/board_object_factory.dart';
 import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/bomb_factory.dart';
@@ -102,23 +98,5 @@ class DestroyableAppearDestructionStrategy implements DestructionStrategy {
         },
       ),
     );
-  }
-}
-
-DestructionStrategy getRandomDestructionStrategy() {
-  //weighted random
-  //0.5 - default
-  //0.2 - delayed
-  //0.1 - bomb appear
-  //0.2 - destroyable appear
-  final random = Random().nextDouble();
-  if (random < 0.5) {
-    return DefaultDestructionStrategy();
-  } else if (random < 0.7) {
-    return DelayedDestructionStrategy();
-  } else if (random < 0.8) {
-    return BombAppearDestructionStrategy();
-  } else {
-    return DestroyableAppearDestructionStrategy();
   }
 }

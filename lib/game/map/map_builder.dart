@@ -2,6 +2,7 @@ import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/board_object/board_object_factory.dart';
 import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/board_object/destruction_strategy.dart';
+import 'package:bomberman/game/board_object/destruction_strategy_factory.dart';
 import 'package:bomberman/game/map/map.dart';
 import 'package:flame/components.dart';
 
@@ -15,6 +16,8 @@ class MapBuilder {
   MapClass? _map;
 
   BoardObjectFactory _boardObjectFactory = RetroThemeBoardObjectFactory();
+  final DestructionStrategyFactory _destructionStrategyFactory =
+      DestructionStrategyFactory();
 
   MapBuilder({required this.tileSize, required this.asciiMap});
 
@@ -34,7 +37,7 @@ class MapBuilder {
               final destroyable =
                   _boardObjectFactory.createDestroyable(position);
               (destroyable as Destroyable)
-                  .setDestructionStrategy(getRandomDestructionStrategy());
+                  .setDestructionStrategy(_destructionStrategyFactory.create());
               objects.add(destroyable);
               break;
             case '#':
