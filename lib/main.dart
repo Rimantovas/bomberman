@@ -4,6 +4,7 @@ import 'package:bomberman/menu/menu_screen.dart';
 import 'package:bomberman/src/session/bloc/session_bloc.dart';
 import 'package:bomberman/utils/app_asset.dart';
 import 'package:bomberman/utils/logger.dart';
+import 'package:bomberman/utils/logger/logger_config.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/game.dart';
@@ -22,6 +23,16 @@ Future<void> main() async {
   dio = Dio(
     BaseOptions(
       baseUrl: 'http://localhost:3000',
+    ),
+  );
+  Log.initialize(
+    const LoggerConfig(
+      enableFileLogging: true,
+      enableCrashReporting: true,
+      enableAlerts: true,
+      crashEndpoint: 'https://api.example.com/crash',
+      alertsEndpoint: 'https://api.example.com/alerts',
+      logFileName: 'game.log',
     ),
   );
   Log.instance.log('Firebase initialized');
