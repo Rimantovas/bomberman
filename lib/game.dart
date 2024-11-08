@@ -88,7 +88,8 @@ class BombermanGame extends FlameGame
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    final command = gameFacade.keyboardHandler.handleKeyEvent(event);
+    final command =
+        gameFacade.keyboardHandler.handleKeyEvent(event, keysPressed);
     if (command != null) {
       command.execute(gameFacade.playerManager.myPlayer);
       return KeyEventResult.handled;

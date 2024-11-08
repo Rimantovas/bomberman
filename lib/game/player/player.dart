@@ -203,4 +203,16 @@ class Player extends SpriteAnimationComponent
       }
     }
   }
+
+  void removeBombAt(Vector2 position) {
+    // Find and remove the bomb at the given position
+    // This is a simplified example - you'll need to implement the actual bomb removal logic
+    // based on your game's implementation
+    final bombsToRemove =
+        children.whereType<Bomb>().where((bomb) => bomb.position == position);
+
+    for (final bomb in bombsToRemove) {
+      remove(bomb);
+    }
+  }
 }

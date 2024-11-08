@@ -3,17 +3,19 @@ import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player.dart';
 
 class MoveCommand implements Command {
-  final MovingState state;
+  final MovingState newState;
+  late MovingState previousState;
 
-  MoveCommand(this.state);
+  MoveCommand(this.newState);
 
   @override
   void execute(Player player) {
-    player.setState(state);
+    previousState = player.state;
+    player.setState(newState);
   }
 
   @override
   void undo(Player player) {
-    // TODO: implement undo
+    player.setState(previousState);
   }
 }

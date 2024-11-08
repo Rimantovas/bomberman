@@ -3,9 +3,10 @@ import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/menu/menu_screen.dart';
 import 'package:bomberman/src/session/bloc/session_bloc.dart';
 import 'package:bomberman/utils/app_asset.dart';
+import 'package:bomberman/utils/http/http_client.dart';
+import 'package:bomberman/utils/http/http_package_client.dart';
 import 'package:bomberman/utils/logger.dart';
 import 'package:bomberman/utils/logger/logger_config.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -13,18 +14,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'game.dart';
 
-late final Dio dio;
+late final HttpClient httpClient;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://localhost:3000',
-    ),
-  );
+
+  httpClient = HttpPackageClient(baseUrl: 'http://localhost:3000');
+  // httpClient = DioClient(
+  //   baseUrl: 'http://localhost:3000',
+  // );
   Log.initialize(
     const LoggerConfig(
       enableFileLogging: true,

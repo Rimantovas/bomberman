@@ -7,7 +7,7 @@ class SessionRepository {
   static const String kLeavePath = '/leave';
 
   Future<SessionJoinResponse> joinSession() async {
-    final response = await dio.post('$kSessionPath$kJoinPath');
+    final response = await httpClient.post('$kSessionPath$kJoinPath');
 
     if (response.statusCode! > 300) {
       throw Exception(response.statusMessage);
@@ -17,7 +17,7 @@ class SessionRepository {
   }
 
   Future<void> leaveSession() async {
-    final response = await dio.post('$kSessionPath$kLeavePath');
+    final response = await httpClient.post('$kSessionPath$kLeavePath');
 
     if (response.statusCode! > 300) {
       throw Exception(response.statusMessage);

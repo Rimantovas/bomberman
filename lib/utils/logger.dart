@@ -13,6 +13,7 @@ enum LogType {
   error,
 }
 
+//* [PATTERN] Singleton Pattern
 class Log {
   static Log? _instance;
   final BaseLogger _logger;

@@ -1,6 +1,7 @@
 import 'package:bomberman/utils/logger.dart';
 import 'package:bomberman/utils/logger/base_logger.dart';
 
+//* [PATTERN] Decorator Pattern
 abstract class LoggerDecorator implements BaseLogger {
   final BaseLogger logger;
 

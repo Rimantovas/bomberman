@@ -1,4 +1,3 @@
-import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/main.dart';
 import 'package:bomberman/src/player/models/player.dart';
 import 'package:bomberman/src/session/models/session_join_response.dart';
@@ -45,7 +44,7 @@ class SessionBloc extends Cubit<SessionState> {
         isLoading: false,
       ));
 
-      dio.interceptors.add(PlayerIdHeaderIntercepter(response.playerId));
+      httpClient.addInterceptor(PlayerIdHeaderIntercepter(response.playerId));
       return response;
     } catch (e) {
       print(e);

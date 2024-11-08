@@ -7,6 +7,7 @@ import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:bomberman/src/player/models/player.dart';
 import 'package:flame/components.dart';
 
+//* [PATTERN] Facade Pattern
 class GameFacade {
   late final PlayerManager playerManager;
   late final GameMap gameMap;

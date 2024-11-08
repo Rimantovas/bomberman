@@ -1,13 +1,22 @@
-import 'package:dio/dio.dart';
+import 'package:bomberman/utils/http/http_client.dart';
 
-class PlayerIdHeaderIntercepter extends Interceptor {
+class PlayerIdHeaderIntercepter extends HttpInterceptor {
   final String playerId;
 
   PlayerIdHeaderIntercepter(this.playerId);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers['player-id'] = playerId;
-    super.onRequest(options, handler);
+  void onRequest(HttpRequest request) {
+    request.headers['player-id'] = playerId;
+  }
+
+  @override
+  void onError(HttpError error) {
+    // TODO: implement onError
+  }
+
+  @override
+  void onResponse(HttpResponse response) {
+    // TODO: implement onResponse
   }
 }
