@@ -1,11 +1,9 @@
 import 'dart:async';
 
 import 'package:bomberman/enums/game_theme.dart';
+import 'package:bomberman/game/facade/game_facade.dart';
 import 'package:bomberman/game/map/game_map.dart';
-import 'package:bomberman/game/movement/keyboard_handler.dart';
-import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/game/player/player_manager.dart';
-import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:bomberman/src/player/bloc/player_manager_bloc.dart';
 import 'package:bomberman/src/player/models/player.dart';
 import 'package:flame/events.dart';
@@ -36,6 +34,7 @@ class BombermanGame extends FlameGame
     required this.initialPlayers,
   }) {
     playerManagerBloc = PlayerManagerBloc(playerId);
+    gameFacade = GameFacade();
 
     add(FlameBlocProvider<PlayerManagerBloc, PlayerManagerState>.value(
       value: playerManagerBloc,
@@ -43,8 +42,7 @@ class BombermanGame extends FlameGame
         FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
           onNewState: (state) {
             print('other players: ${state.otherPlayers.length}');
-            // Update game state based on other players
-            updateOtherPlayers(state.otherPlayers);
+            gameFacade.updatePlayers(state.otherPlayers);
           },
         ),
       ],
@@ -56,41 +54,33 @@ class BombermanGame extends FlameGame
   final String sessionId;
   final List<PlayerModel> initialPlayers;
   late final PlayerManagerBloc playerManagerBloc;
+  late final GameFacade gameFacade;
 
-  late final PlayerManager playerManager;
-  late final GameMap gameMap;
-  late final AppKeyboardHandler keyboardHandler;
+  GameMap get gameMap => gameFacade.gameMap;
+  PlayerManager get playerManager => gameFacade.playerManager;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    await initializeGame(playerId);
-    await playerManager.waitForPlayersToLoad();
+    await initializeGame();
+    await gameFacade.playerManager.waitForPlayersToLoad();
   }
 
-  Future<void> initializeGame(String myPlayerId) async {
-    gameMap =
-        GameMap(asciiMap: asciiMap, theme: GameTheme.retro); //todo change theme
-    gameMap.initStart();
-    await add(gameMap);
-
-    playerManager = PlayerManager();
-    await add(playerManager);
-
-    final myPlayer = Player(
-      id: myPlayerId,
-      position: Vector2(32, 32),
-      colorImplementor: BlueColorImplementor(),
+  Future<void> initializeGame() async {
+    await gameFacade.initializeGame(
+      asciiMap: asciiMap,
+      playerId: playerId,
+      theme: GameTheme.retro,
     );
-    await playerManager.setMyPlayer(myPlayer);
 
-    keyboardHandler = AppKeyboardHandler(myPlayer);
+    await add(gameFacade.gameMap);
+    await add(gameFacade.playerManager);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    playerManager.update(dt);
+    gameFacade.update(dt);
   }
 
   @override
@@ -98,42 +88,12 @@ class BombermanGame extends FlameGame
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    final command = keyboardHandler.handleKeyEvent(event);
+    final command = gameFacade.keyboardHandler.handleKeyEvent(event);
     if (command != null) {
-      command.execute(playerManager.myPlayer);
+      command.execute(gameFacade.playerManager.myPlayer);
       return KeyEventResult.handled;
     }
     return KeyEventResult.handled;
-  }
-
-  void updateOtherPlayers(List<PlayerModel> otherPlayers) {
-    // Update other players in the game
-    for (final player in otherPlayers) {
-      if (playerManager.getPlayer(player.id) == null) {
-        playerManager.addOtherPlayer(player.id,
-            Vector2(player.positionX.toDouble(), player.positionY.toDouble()));
-      } else {
-        playerManager.updatePlayerPosition(player.id,
-            Vector2(player.positionX.toDouble(), player.positionY.toDouble()));
-      }
-    }
-
-    playerManager.removePlayersNotIn(otherPlayers.map((p) => p.id).toList());
-  }
-
-  // Method to add other players when they join
-  void addOtherPlayer(String id, Vector2 initialPosition) {
-    playerManager.addOtherPlayer(id, initialPosition);
-  }
-
-  // Method to remove a player when they leave
-  void removePlayer(String id) {
-    playerManager.removePlayer(id);
-  }
-
-  // Method to update other player's position
-  void updatePlayerPosition(String id, Vector2 newPosition) {
-    playerManager.updatePlayerPosition(id, newPosition);
   }
 
   void updateMyPosition(Vector2 newPosition) {
