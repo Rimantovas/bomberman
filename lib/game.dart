@@ -71,10 +71,14 @@ class BombermanGame extends FlameGame
       asciiMap: asciiMap,
       playerId: playerId,
       theme: GameTheme.retro,
+      game: this,
     );
+    print('2 ${gameFacade.gameMap.children.length}');
 
     await add(gameFacade.gameMap);
     await add(gameFacade.playerManager);
+
+    print('3 ${children.length}');
   }
 
   @override

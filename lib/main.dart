@@ -89,10 +89,11 @@ class GameScreen extends StatelessWidget {
                               child: CircularProgressIndicator(),
                             );
                           }
+                          print('1');
                           return GameWidget(
                             game: BombermanGame(
-                              playerId: state.playerId!,
-                              sessionId: state.sessionId!,
+                              playerId: state.playerId ?? '',
+                              sessionId: state.sessionId ?? '',
                               initialPlayers: state.initialPlayers,
                             ),
                           );

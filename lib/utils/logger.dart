@@ -15,7 +15,7 @@ enum LogType {
 
 //* [PATTERN] Singleton Pattern
 class Log {
-  static Log? _instance;
+  static late final Log? _instance;
   final BaseLogger _logger;
 
   Log._({required LoggerConfig config}) : _logger = _createLogger(config);
@@ -58,12 +58,11 @@ class Log {
   }
 
   static void initialize(LoggerConfig config) {
-    _instance ??= Log._(config: config);
+    _instance = Log._(config: config);
   }
 
   static Log get instance {
     if (_instance == null) {
-      // Initialize with default configuration if not initialized
       initialize(const LoggerConfig());
     }
     return _instance!;

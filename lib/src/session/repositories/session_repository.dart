@@ -10,7 +10,7 @@ class SessionRepository {
     final response = await httpClient.post('$kSessionPath$kJoinPath');
 
     if (response.statusCode! > 300) {
-      throw Exception(response.statusMessage);
+      throw Exception(response.errorMessage);
     }
 
     return SessionJoinResponseMapper.fromMap(response.data);
@@ -20,7 +20,7 @@ class SessionRepository {
     final response = await httpClient.post('$kSessionPath$kLeavePath');
 
     if (response.statusCode! > 300) {
-      throw Exception(response.statusMessage);
+      throw Exception(response.errorMessage);
     }
 
     return response.data;

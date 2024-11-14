@@ -14,43 +14,43 @@ class DioClient implements HttpClient {
         );
 
   @override
-  Future<dynamic> get(String path,
+  Future<APIResponse<dynamic>> get(String path,
       {Map<String, dynamic>? queryParameters}) async {
     try {
       final response = await _dio.get(path, queryParameters: queryParameters);
-      return response.data;
+      return APIResponse(data: response.data, statusCode: response.statusCode);
     } catch (e) {
-      throw HttpError(message: e.toString());
+      throw APIResponse(errorMessage: e.toString(), statusCode: 500);
     }
   }
 
   @override
-  Future<dynamic> post(String path, {dynamic data}) async {
+  Future<APIResponse<dynamic>> post(String path, {dynamic data}) async {
     try {
       final response = await _dio.post(path, data: data);
-      return response.data;
+      return APIResponse(data: response.data, statusCode: response.statusCode);
     } catch (e) {
-      throw HttpError(message: e.toString());
+      throw APIResponse(errorMessage: e.toString(), statusCode: 500);
     }
   }
 
   @override
-  Future<dynamic> patch(String path, {dynamic data}) async {
+  Future<APIResponse<dynamic>> patch(String path, {dynamic data}) async {
     try {
       final response = await _dio.patch(path, data: data);
-      return response.data;
+      return APIResponse(data: response.data, statusCode: response.statusCode);
     } catch (e) {
-      throw HttpError(message: e.toString());
+      throw APIResponse(errorMessage: e.toString(), statusCode: 500);
     }
   }
 
   @override
-  Future<dynamic> delete(String path) async {
+  Future<APIResponse<dynamic>> delete(String path) async {
     try {
       final response = await _dio.delete(path);
-      return response.data;
+      return APIResponse(data: response.data, statusCode: response.statusCode);
     } catch (e) {
-      throw HttpError(message: e.toString());
+      throw APIResponse(errorMessage: e.toString(), statusCode: 500);
     }
   }
 
@@ -80,20 +80,18 @@ class _DioInterceptorAdapter extends dio.Interceptor {
   @override
   void onResponse(
       dio.Response response, dio.ResponseInterceptorHandler handler) {
-    interceptor.onResponse(HttpResponse(
+    interceptor.onResponse(APIResponse(
       data: response.data,
       statusCode: response.statusCode ?? 0,
-      headers: response.headers.map,
     ));
     super.onResponse(response, handler);
   }
 
   @override
   void onError(dio.DioException err, dio.ErrorInterceptorHandler handler) {
-    interceptor.onError(HttpError(
-      message: err.message ?? 'Unknown error',
+    interceptor.onError(APIResponse(
+      errorMessage: err.message ?? 'Unknown error',
       statusCode: err.response?.statusCode,
-      error: err,
     ));
     super.onError(err, handler);
   }

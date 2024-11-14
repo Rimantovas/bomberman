@@ -1,4 +1,5 @@
 import 'package:bomberman/enums/game_theme.dart';
+import 'package:bomberman/game.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/movement/keyboard_handler.dart';
 import 'package:bomberman/game/player/player.dart';
@@ -12,12 +13,15 @@ class GameFacade {
   late final PlayerManager playerManager;
   late final GameMap gameMap;
   late final AppKeyboardHandler keyboardHandler;
+  late final BombermanGame game;
 
   Future<void> initializeGame({
     required List<String> asciiMap,
     required String playerId,
     required GameTheme theme,
+    required BombermanGame game,
   }) async {
+    this.game = game;
     await _initializeMap(asciiMap, theme);
     await _initializePlayers(playerId);
     _initializeControls(playerId);
@@ -25,7 +29,11 @@ class GameFacade {
 
   Future<void> _initializeMap(List<String> asciiMap, GameTheme theme) async {
     gameMap = GameMap(asciiMap: asciiMap, theme: theme);
-    gameMap.initStart();
+    await game.add(gameMap);
+    await gameMap.initStart();
+
+    print(
+        '4 ${gameMap.children.map((e) => e is SpriteComponent ? 'Sprite ${e.sprite}' : e.runtimeType)}');
   }
 
   Future<void> _initializePlayers(String playerId) async {

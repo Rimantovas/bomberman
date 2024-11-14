@@ -13,10 +13,16 @@ class RetroThemeBedrock extends Bedrock {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite(
+    print('onLoad');
+
+    final asset = await gameRef.loadSprite(
       AppAsset.bedrockWall, //todo change to retro theme
       srcSize: Vector2(32, 32),
     );
+
+    print('asset ${asset.toString()}');
+
+    sprite = asset;
   }
 }
 

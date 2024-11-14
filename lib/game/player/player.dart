@@ -136,6 +136,7 @@ class Player extends SpriteAnimationComponent
   MovingState get state => _state;
 
   void placeBomb() {
+    print('Placing bomb');
     final bomb = BombFactory.createBomb(
       BombType.regular,
       position: position.clone(),

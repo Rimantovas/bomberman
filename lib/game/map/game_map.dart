@@ -3,7 +3,7 @@ import 'package:bomberman/game/board_object/board_object.dart';
 import 'package:bomberman/game/map/map_builder.dart';
 import 'package:flame/components.dart';
 
-class GameMap extends Component {
+class GameMap extends Component with HasGameRef {
   final List<String> asciiMap;
   final GameTheme theme;
 
@@ -16,23 +16,26 @@ class GameMap extends Component {
   static final Vector2 gameSize =
       Vector2(mapWidth * tileSize.toDouble(), mapHeight * tileSize.toDouble());
 
-  late final List<List<BoardObject?>> grid;
+  late List<List<BoardObject?>> grid;
   final List<BoardObject> startComponents = [];
 
-  void initStart() {
+  Future<void> initStart() async {
     final mapBuilder =
         GameStartMapBuilder(tileSize: tileSize, asciiMap: asciiMap)
           ..setTheme(theme);
 
     final map = mapBuilder.build();
     final objects = map.objects;
+    print('objects ${objects.length}');
+
     grid = List.generate(
       asciiMap.length,
       (y) => List.generate(asciiMap[0].length, (x) => null),
     );
 
     for (var object in objects) {
-      add(object);
+      print('add ${object.runtimeType}');
+      await gameRef.add(object);
       startComponents.add(object);
 
       Vector2 gridPos = object.getGridPosition(tileSize);
@@ -40,7 +43,7 @@ class GameMap extends Component {
     }
   }
 
-  void initGame() {
+  Future<void> initGame() async {
     for (var component in startComponents) {
       remove(component);
     }
@@ -56,7 +59,7 @@ class GameMap extends Component {
     );
 
     for (var object in objects) {
-      add(object);
+      await add(object);
       Vector2 gridPos = object.getGridPosition(tileSize);
       grid[gridPos.y.toInt()][gridPos.x.toInt()] = object;
     }

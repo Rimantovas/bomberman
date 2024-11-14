@@ -12,8 +12,8 @@ class PlayerRepository {
     final response = await httpClient.patch('$kPlayersPath$kMovePath',
         data: request.toMap());
 
-    if (response['statusCode'] > 300) {
-      throw Exception(response['message']);
+    if (response.statusCode! > 300) {
+      throw Exception(response.errorMessage);
     }
   }
 }
