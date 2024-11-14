@@ -3,10 +3,10 @@ import 'package:dio/dio.dart' as dio;
 import 'http_client.dart';
 
 class DioClient implements HttpClient {
-  final dio.Dio _dio;
+  final dio.Dio adaptee;
 
   DioClient({String? baseUrl})
-      : _dio = dio.Dio(
+      : adaptee = dio.Dio(
           dio.BaseOptions(
             baseUrl: baseUrl ?? '',
             validateStatus: (status) => true,
@@ -17,7 +17,8 @@ class DioClient implements HttpClient {
   Future<dynamic> get(String path,
       {Map<String, dynamic>? queryParameters}) async {
     try {
-      final response = await _dio.get(path, queryParameters: queryParameters);
+      final response =
+          await adaptee.get(path, queryParameters: queryParameters);
       return response.data;
     } catch (e) {
       throw HttpError(message: e.toString());
@@ -27,7 +28,7 @@ class DioClient implements HttpClient {
   @override
   Future<dynamic> post(String path, {dynamic data}) async {
     try {
-      final response = await _dio.post(path, data: data);
+      final response = await adaptee.post(path, data: data);
       return response.data;
     } catch (e) {
       throw HttpError(message: e.toString());
@@ -37,7 +38,7 @@ class DioClient implements HttpClient {
   @override
   Future<dynamic> patch(String path, {dynamic data}) async {
     try {
-      final response = await _dio.patch(path, data: data);
+      final response = await adaptee.patch(path, data: data);
       return response.data;
     } catch (e) {
       throw HttpError(message: e.toString());
@@ -47,7 +48,7 @@ class DioClient implements HttpClient {
   @override
   Future<dynamic> delete(String path) async {
     try {
-      final response = await _dio.delete(path);
+      final response = await adaptee.delete(path);
       return response.data;
     } catch (e) {
       throw HttpError(message: e.toString());
@@ -56,14 +57,14 @@ class DioClient implements HttpClient {
 
   @override
   void addInterceptor(HttpInterceptor interceptor) {
-    _dio.interceptors.add(_DioInterceptorAdapter(interceptor));
+    adaptee.interceptors.add(adapteeInterceptorAdapter(interceptor));
   }
 }
 
-class _DioInterceptorAdapter extends dio.Interceptor {
+class adapteeInterceptorAdapter extends dio.Interceptor {
   final HttpInterceptor interceptor;
 
-  _DioInterceptorAdapter(this.interceptor);
+  adapteeInterceptorAdapter(this.interceptor);
 
   @override
   void onRequest(

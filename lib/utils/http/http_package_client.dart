@@ -7,9 +7,9 @@ import 'http_client.dart';
 class HttpPackageClient implements HttpClient {
   final String? baseUrl;
   final List<HttpInterceptor> _interceptors = [];
-  final http.Client _client;
+  final http.Client adaptee;
 
-  HttpPackageClient({this.baseUrl}) : _client = http.Client();
+  HttpPackageClient({this.baseUrl}) : adaptee = http.Client();
 
   String _buildUrl(String path) {
     return baseUrl != null ? '$baseUrl$path' : path;
@@ -24,7 +24,7 @@ class HttpPackageClient implements HttpClient {
       final request = HttpRequest(path: path, queryParameters: queryParameters);
       _runRequestInterceptors(request);
 
-      final response = await _client.get(uri);
+      final response = await adaptee.get(uri);
       final httpResponse = _handleResponse(response);
       _runResponseInterceptors(httpResponse);
 
@@ -43,7 +43,7 @@ class HttpPackageClient implements HttpClient {
       final request = HttpRequest(path: path, data: data);
       _runRequestInterceptors(request);
 
-      final response = await _client.post(
+      final response = await adaptee.post(
         uri,
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json'},
@@ -66,7 +66,7 @@ class HttpPackageClient implements HttpClient {
       final request = HttpRequest(path: path, data: data);
       _runRequestInterceptors(request);
 
-      final response = await _client.patch(
+      final response = await adaptee.patch(
         uri,
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json'},
@@ -89,7 +89,7 @@ class HttpPackageClient implements HttpClient {
       final request = HttpRequest(path: path);
       _runRequestInterceptors(request);
 
-      final response = await _client.delete(uri);
+      final response = await adaptee.delete(uri);
       final httpResponse = _handleResponse(response);
       _runResponseInterceptors(httpResponse);
 
