@@ -41,7 +41,6 @@ class BombermanGame extends FlameGame
       children: [
         FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
           onNewState: (state) {
-            print('other players: ${state.otherPlayers.length}');
             gameFacade.updatePlayers(state.otherPlayers);
           },
         ),
@@ -63,7 +62,7 @@ class BombermanGame extends FlameGame
   Future<void> onLoad() async {
     await super.onLoad();
     await initializeGame();
-    await gameFacade.playerManager.waitForPlayersToLoad();
+    // await gameFacade.playerManager.waitForPlayersToLoad();
   }
 
   Future<void> initializeGame() async {

@@ -73,11 +73,14 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState>
   }
 
   Future<void> updateMyPosition(Vector2 newPosition) async {
-    print('updateMyPosition');
-    await _playerRepository.move(PlayerMoveRequest(
-      newPosition.x.toInt(),
-      newPosition.y.toInt(),
-    ));
+    try {
+      await _playerRepository.move(PlayerMoveRequest(
+        newPosition.x.toInt(),
+        newPosition.y.toInt(),
+      ));
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

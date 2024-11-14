@@ -1,10 +1,7 @@
 //* [PATTERN] Adapter Pattern
 
-
-
 abstract class HttpClient {
-  Future<APIResponse> get(String path,
-      {Map<String, dynamic>? queryParameters});
+  Future<APIResponse> get(String path, {Map<String, dynamic>? queryParameters});
   Future<APIResponse> post(String path, {dynamic data});
   Future<APIResponse> patch(String path, {dynamic data});
   Future<APIResponse> delete(String path);
@@ -13,25 +10,26 @@ abstract class HttpClient {
 }
 
 abstract class HttpInterceptor {
-  void onRequest(HttpRequest request);
-  void onResponse(APIResponse response);
-  void onError(APIResponse error);
+  HttpRequest onRequest(HttpRequest request);
+  APIResponse onResponse(APIResponse response);
+  APIResponse onError(APIResponse error);
 }
 
 class HttpRequest {
   final String path;
-  final Map<String, dynamic> headers;
+  final Map<String, String> headers;
   final dynamic data;
   final Map<String, dynamic>? queryParameters;
 
   HttpRequest({
     required this.path,
-    this.headers = const {},
+    this.headers = const {
+      'Content-Type': 'application/json',
+    },
     this.data,
     this.queryParameters,
   });
 }
-
 
 class APIResponse<T> {
   APIResponse({

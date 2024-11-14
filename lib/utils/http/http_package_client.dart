@@ -21,17 +21,17 @@ class HttpPackageClient implements HttpClient {
     try {
       final uri =
           Uri.parse(_buildUrl(path)).replace(queryParameters: queryParameters);
-      final request = HttpRequest(path: path, queryParameters: queryParameters);
-      _runRequestInterceptors(request);
+      var request = HttpRequest(path: path, queryParameters: queryParameters);
+      request = _runRequestInterceptors(request);
 
-      final response = await adaptee.get(uri);
-      final httpResponse = _handleResponse(response);
-      _runResponseInterceptors(httpResponse);
+      final response = await adaptee.get(uri, headers: request.headers);
+      var httpResponse = _handleResponse(response);
+      httpResponse = _runResponseInterceptors(httpResponse);
 
       return httpResponse;
     } catch (e) {
-      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
-      _runErrorInterceptors(error);
+      var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
+      error = _runErrorInterceptors(error);
       throw error;
     }
   }
@@ -40,21 +40,21 @@ class HttpPackageClient implements HttpClient {
   Future<APIResponse<dynamic>> post(String path, {dynamic data}) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
-      final request = HttpRequest(path: path, data: data);
-      _runRequestInterceptors(request);
+      var request = HttpRequest(path: path, data: data);
+      request = _runRequestInterceptors(request);
 
       final response = await adaptee.post(
         uri,
-        body: jsonEncode(data),
-        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(request.data),
+        headers: request.headers,
       );
-      final httpResponse = _handleResponse(response);
-      _runResponseInterceptors(httpResponse);
+      var httpResponse = _handleResponse(response);
+      httpResponse = _runResponseInterceptors(httpResponse);
 
       return httpResponse;
     } catch (e) {
-      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
-      _runErrorInterceptors(error);
+      var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
+      error = _runErrorInterceptors(error);
       throw error;
     }
   }
@@ -63,21 +63,21 @@ class HttpPackageClient implements HttpClient {
   Future<APIResponse<dynamic>> patch(String path, {dynamic data}) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
-      final request = HttpRequest(path: path, data: data);
-      _runRequestInterceptors(request);
-
+      var request = HttpRequest(path: path, data: data);
+      request = _runRequestInterceptors(request);
       final response = await adaptee.patch(
         uri,
-        body: jsonEncode(data),
-        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(request.data),
+        headers: request.headers,
       );
-      final httpResponse = _handleResponse(response);
-      _runResponseInterceptors(httpResponse);
+
+      var httpResponse = _handleResponse(response);
+      httpResponse = _runResponseInterceptors(httpResponse);
 
       return httpResponse;
     } catch (e) {
-      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
-      _runErrorInterceptors(error);
+      var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
+      error = _runErrorInterceptors(error);
       throw error;
     }
   }
@@ -86,17 +86,17 @@ class HttpPackageClient implements HttpClient {
   Future<APIResponse<dynamic>> delete(String path) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
-      final request = HttpRequest(path: path);
-      _runRequestInterceptors(request);
+      var request = HttpRequest(path: path);
+      request = _runRequestInterceptors(request);
 
-      final response = await adaptee.delete(uri);
-      final httpResponse = _handleResponse(response);
-      _runResponseInterceptors(httpResponse);
+      final response = await adaptee.delete(uri, headers: request.headers);
+      var httpResponse = _handleResponse(response);
+      httpResponse = _runResponseInterceptors(httpResponse);
 
       return httpResponse;
     } catch (e) {
-      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
-      _runErrorInterceptors(error);
+      var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
+      error = _runErrorInterceptors(error);
       throw error;
     }
   }
@@ -115,21 +115,27 @@ class HttpPackageClient implements HttpClient {
     _interceptors.add(interceptor);
   }
 
-  void _runRequestInterceptors(HttpRequest request) {
+  HttpRequest _runRequestInterceptors(HttpRequest request) {
+    var newRequest = request;
     for (final interceptor in _interceptors) {
-      interceptor.onRequest(request);
+      newRequest = interceptor.onRequest(newRequest);
     }
+    return newRequest;
   }
 
-  void _runResponseInterceptors(APIResponse<dynamic> response) {
+  APIResponse<dynamic> _runResponseInterceptors(APIResponse<dynamic> response) {
+    var newResponse = response;
     for (final interceptor in _interceptors) {
-      interceptor.onResponse(response);
+      newResponse = interceptor.onResponse(newResponse);
     }
+    return newResponse;
   }
 
-  void _runErrorInterceptors(APIResponse<dynamic> error) {
+  APIResponse<dynamic> _runErrorInterceptors(APIResponse<dynamic> error) {
+    var newError = error;
     for (final interceptor in _interceptors) {
-      interceptor.onError(error);
+      newError = interceptor.onError(newError);
     }
+    return newError;
   }
 }

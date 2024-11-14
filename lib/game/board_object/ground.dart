@@ -1,3 +1,4 @@
+import 'package:bomberman/utils/app_asset.dart';
 import 'package:flame/components.dart';
 
 import 'board_object.dart';
@@ -21,10 +22,10 @@ class ComicThemeGround extends Ground {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // sprite = await gameRef.loadSprite(
-    //   'ground.png', //todo change to comic theme
-    //   srcSize: Vector2(32, 32),
-    // );
+    sprite = await gameRef.loadSprite(
+      AppAsset.grass, //todo change to comic theme
+      srcSize: Vector2(32, 32),
+    );
   }
 }
 
@@ -33,9 +34,10 @@ class RetroThemeGround extends Ground {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // sprite = await gameRef.loadSprite(
-    //   'ground.png', //todo change to retro theme
-    //   srcSize: Vector2(32, 32),
-    // );
+
+    sprite = await gameRef.loadSprite(
+      AppAsset.grass, //todo change to comic theme
+      srcSize: Vector2(32, 32),
+    );
   }
 }

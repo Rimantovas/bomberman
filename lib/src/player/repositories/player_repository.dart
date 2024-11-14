@@ -9,8 +9,13 @@ class PlayerRepository {
   PlayerRepository();
 
   Future<void> move(PlayerMoveRequest request) async {
-    final response = await httpClient.patch('$kPlayersPath$kMovePath',
-        data: request.toMap());
+    final data = request.toMap();
+    final response = await httpClient.patch(
+      '$kPlayersPath$kMovePath',
+      data: data,
+    );
+
+    print(response.statusCode);
 
     if (response.statusCode! > 300) {
       throw Exception(response.errorMessage);

@@ -71,7 +71,8 @@ class adapteeInterceptorAdapter extends dio.Interceptor {
       dio.RequestOptions options, dio.RequestInterceptorHandler handler) {
     interceptor.onRequest(HttpRequest(
       path: options.path,
-      headers: options.headers,
+      headers:
+          options.headers.map((key, value) => MapEntry(key, value.toString())),
       data: options.data,
       queryParameters: options.queryParameters,
     ));

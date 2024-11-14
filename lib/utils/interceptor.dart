@@ -6,17 +6,27 @@ class PlayerIdHeaderIntercepter extends HttpInterceptor {
   PlayerIdHeaderIntercepter(this.playerId);
 
   @override
-  void onRequest(HttpRequest request) {
-    request.headers['player-id'] = playerId;
+  HttpRequest onRequest(HttpRequest request) {
+    final newRequest = HttpRequest(
+        path: request.path,
+        queryParameters: request.queryParameters,
+        data: request.data,
+        headers: {
+          ...request.headers,
+          'player-id': playerId,
+        });
+    return newRequest;
   }
 
   @override
-  void onError(APIResponse<dynamic> error) {
+  APIResponse onError(APIResponse<dynamic> error) {
     // TODO: implement onError
+    return error;
   }
 
   @override
-  void onResponse(APIResponse<dynamic> response) {
+  APIResponse onResponse(APIResponse<dynamic> response) {
     // TODO: implement onResponse
+    return response;
   }
 }
