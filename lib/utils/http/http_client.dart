@@ -1,18 +1,21 @@
 //* [PATTERN] Adapter Pattern
 
+
+
 abstract class HttpClient {
-  Future<dynamic> get(String path, {Map<String, dynamic>? queryParameters});
-  Future<dynamic> post(String path, {dynamic data});
-  Future<dynamic> patch(String path, {dynamic data});
-  Future<dynamic> delete(String path);
+  Future<APIResponse> get(String path,
+      {Map<String, dynamic>? queryParameters});
+  Future<APIResponse> post(String path, {dynamic data});
+  Future<APIResponse> patch(String path, {dynamic data});
+  Future<APIResponse> delete(String path);
 
   void addInterceptor(HttpInterceptor interceptor);
 }
 
 abstract class HttpInterceptor {
   void onRequest(HttpRequest request);
-  void onResponse(HttpResponse response);
-  void onError(HttpError error);
+  void onResponse(APIResponse response);
+  void onError(APIResponse error);
 }
 
 class HttpRequest {
@@ -29,26 +32,21 @@ class HttpRequest {
   });
 }
 
-class HttpResponse {
-  final dynamic data;
-  final int statusCode;
-  final Map<String, dynamic> headers;
 
-  HttpResponse({
-    required this.data,
-    required this.statusCode,
-    this.headers = const {},
-  });
-}
-
-class HttpError {
-  final String message;
-  final int? statusCode;
-  final dynamic error;
-
-  HttpError({
-    required this.message,
+class APIResponse<T> {
+  APIResponse({
+    this.data,
+    this.errorMessage,
+    this.isError = false,
     this.statusCode,
-    this.error,
   });
+  T? data;
+  bool isError;
+  String? errorMessage;
+  num? statusCode;
+
+  @override
+  String toString() {
+    return 'APIResponse{data: $data, isError: $isError, errorMessage: $errorMessage, statusCode: $statusCode}';
+  }
 }

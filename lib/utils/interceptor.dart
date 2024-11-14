@@ -11,12 +11,12 @@ class PlayerIdHeaderIntercepter extends HttpInterceptor {
   }
 
   @override
-  void onError(HttpError error) {
+  void onError(APIResponse<dynamic> error) {
     // TODO: implement onError
   }
 
   @override
-  void onResponse(HttpResponse response) {
+  void onResponse(APIResponse<dynamic> response) {
     // TODO: implement onResponse
   }
 }

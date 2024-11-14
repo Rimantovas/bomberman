@@ -16,7 +16,7 @@ class HttpPackageClient implements HttpClient {
   }
 
   @override
-  Future<dynamic> get(String path,
+  Future<APIResponse<dynamic>> get(String path,
       {Map<String, dynamic>? queryParameters}) async {
     try {
       final uri =
@@ -28,16 +28,16 @@ class HttpPackageClient implements HttpClient {
       final httpResponse = _handleResponse(response);
       _runResponseInterceptors(httpResponse);
 
-      return httpResponse.data;
+      return httpResponse;
     } catch (e) {
-      final error = HttpError(message: e.toString());
+      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       _runErrorInterceptors(error);
       throw error;
     }
   }
 
   @override
-  Future<dynamic> post(String path, {dynamic data}) async {
+  Future<APIResponse<dynamic>> post(String path, {dynamic data}) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
       final request = HttpRequest(path: path, data: data);
@@ -51,16 +51,16 @@ class HttpPackageClient implements HttpClient {
       final httpResponse = _handleResponse(response);
       _runResponseInterceptors(httpResponse);
 
-      return httpResponse.data;
+      return httpResponse;
     } catch (e) {
-      final error = HttpError(message: e.toString());
+      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       _runErrorInterceptors(error);
       throw error;
     }
   }
 
   @override
-  Future<dynamic> patch(String path, {dynamic data}) async {
+  Future<APIResponse<dynamic>> patch(String path, {dynamic data}) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
       final request = HttpRequest(path: path, data: data);
@@ -74,16 +74,16 @@ class HttpPackageClient implements HttpClient {
       final httpResponse = _handleResponse(response);
       _runResponseInterceptors(httpResponse);
 
-      return httpResponse.data;
+      return httpResponse;
     } catch (e) {
-      final error = HttpError(message: e.toString());
+      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       _runErrorInterceptors(error);
       throw error;
     }
   }
 
   @override
-  Future<dynamic> delete(String path) async {
+  Future<APIResponse<dynamic>> delete(String path) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
       final request = HttpRequest(path: path);
@@ -93,21 +93,20 @@ class HttpPackageClient implements HttpClient {
       final httpResponse = _handleResponse(response);
       _runResponseInterceptors(httpResponse);
 
-      return httpResponse.data;
+      return httpResponse;
     } catch (e) {
-      final error = HttpError(message: e.toString());
+      final error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       _runErrorInterceptors(error);
       throw error;
     }
   }
 
-  HttpResponse _handleResponse(http.Response response) {
+  APIResponse<dynamic> _handleResponse(http.Response response) {
     final dynamic data =
         response.body.isNotEmpty ? jsonDecode(response.body) : null;
-    return HttpResponse(
+    return APIResponse(
       data: data,
       statusCode: response.statusCode,
-      headers: response.headers,
     );
   }
 
@@ -122,13 +121,13 @@ class HttpPackageClient implements HttpClient {
     }
   }
 
-  void _runResponseInterceptors(HttpResponse response) {
+  void _runResponseInterceptors(APIResponse<dynamic> response) {
     for (final interceptor in _interceptors) {
       interceptor.onResponse(response);
     }
   }
 
-  void _runErrorInterceptors(HttpError error) {
+  void _runErrorInterceptors(APIResponse<dynamic> error) {
     for (final interceptor in _interceptors) {
       interceptor.onError(error);
     }
