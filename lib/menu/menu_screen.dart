@@ -1,3 +1,4 @@
+import 'package:bomberman/audio/audio_manager.dart';
 import 'package:bomberman/main.dart';
 import 'package:bomberman/menu/bloc/game_settings_bloc.dart';
 import 'package:bomberman/menu/screens/settings_screen.dart';
@@ -6,15 +7,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-class MainMenu extends StatelessWidget {
+class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
+
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
+  final AudioManager _audioManager = AudioManager();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBackgroundMusic();
+  }
+
+  Future<void> _loadBackgroundMusic() async {
+    await _audioManager.loadAudio('assets/audio/background_music.mp3');
+    await _audioManager.play();
+  }
+
+  @override
+  void dispose() {
+    _audioManager.stop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GameSettingsBloc, GameSettingsState>(
       bloc: GetIt.I.get<GameSettingsBloc>(),
       builder: (context, state) {
-        print(state.theme);
         return Scaffold(
           body: Container(
             decoration: BoxDecoration(

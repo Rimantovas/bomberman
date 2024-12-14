@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import 'audio/audio_manager.dart';
 import 'game.dart';
 
 late final HttpClient httpClient;
@@ -34,6 +35,10 @@ Future<void> main() async {
     ),
   );
   Log.instance.log('Firebase initialized');
+
+  final audioManager = AudioManager();
+  await audioManager.initialize();
+
   runApp(const MyApp());
 }
 

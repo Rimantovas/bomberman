@@ -1194,6 +1194,8 @@ PODS:
     - leveldb-library (~> 1.22)
     - nanopb (~> 3.30910.0)
   - FirebaseSharedSwift (11.3.0)
+  - flutter_soloud (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - GoogleUtilities/Environment (8.0.2):
     - GoogleUtilities/Privacy
@@ -1306,6 +1308,7 @@ PODS:
 DEPENDENCIES:
   - cloud_firestore (from `Flutter/ephemeral/.symlinks/plugins/cloud_firestore/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
+  - flutter_soloud (from `Flutter/ephemeral/.symlinks/plugins/flutter_soloud/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
@@ -1332,6 +1335,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/cloud_firestore/macos
   firebase_core:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_core/macos
+  flutter_soloud:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_soloud/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   path_provider_foundation:
@@ -1350,6 +1355,7 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 62708adbc1dfcd6d165a7c0a202067b441912dc9
   FirebaseFirestoreInternal: ad9b9ee2d3d430c8f31333a69b3b6737a7206232
   FirebaseSharedSwift: d39c2ad64a11a8d936ce25a42b00df47078bb59c
+  flutter_soloud: 401bea07fc43636ab5c6777f7adf691403d0ea48
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   "gRPC-C++": 2fa52b3141e7789a28a737f251e0c45b4cb20a87
@@ -1360,4 +1366,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6acf97521436d16fc31cd5e1a02000905acdb3ae
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
