@@ -1,3 +1,5 @@
+import 'package:bomberman/enums/game_theme.dart';
+
 class AppAsset {
   static String character(String type, String direction) =>
       'character/$type-$direction.png';
@@ -20,5 +22,6 @@ class AppAsset {
   static String rockWall = terrain('rock');
   static String grass = terrain('grass');
 
-  static String menuBackground = 'assets/images/menu_bg.png';
+  static String menuBackground(GameTheme theme) =>
+      'assets/images/menu_bg_${theme.name}.png';
 }
