@@ -1,6 +1,6 @@
 // Abstraction
+import 'package:bomberman/game/rendering/sprite_sheet_cache.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
@@ -9,94 +9,64 @@ abstract class ColorScheme {
 
   ColorScheme(this.implementor);
 
-  Future<SpriteSheet> getSprite(String assetPath);
+  Future<SpriteSheet> getSprite(String assetPath) async {
+    final spriteSheet = await SpriteSheetCache.getSpriteSheet(
+      assetPath,
+      Vector2(32, 32),
+    );
+
+    // Apply color tinting to a copy of the sprites to avoid modifying cached version
+    final sprites = spriteSheet.sprites;
+    for (final sprite in sprites) {
+      sprite.paint.colorFilter = implementor.getColorFilter();
+    }
+
+    return spriteSheet;
+  }
 }
 
 // Refined Abstractions
 class PlayerColorScheme extends ColorScheme {
   PlayerColorScheme(super.implementor);
-
-  @override
-  Future<SpriteSheet> getSprite(String assetPath) {
-    return implementor.tintSprite(assetPath);
-  }
 }
 
 class BombColorScheme extends ColorScheme {
   BombColorScheme(super.implementor);
-
-  @override
-  Future<SpriteSheet> getSprite(String assetPath) {
-    return implementor.tintSprite(assetPath);
-  }
 }
 
 // Implementor
 abstract class ColorImplementor {
-  Future<SpriteSheet> tintSprite(String assetPath);
+  ColorFilter getColorFilter();
 }
 
 // Concrete Implementors
 class RedColorImplementor implements ColorImplementor {
   @override
-  Future<SpriteSheet> tintSprite(String assetPath) async {
-    final image = await Flame.images.load(assetPath);
-    final spriteSheet = SpriteSheet(
-      image: image,
-      srcSize: Vector2(32, 32),
+  ColorFilter getColorFilter() {
+    return ColorFilter.mode(
+      Colors.red.withOpacity(0.5),
+      BlendMode.srcATop,
     );
-
-    final sprites = spriteSheet.sprites;
-    for (final sprite in sprites) {
-      sprite.paint.colorFilter = ColorFilter.mode(
-        Colors.red.withOpacity(0.5),
-        BlendMode.srcATop,
-      );
-    }
-
-    return spriteSheet;
   }
 }
 
 class BlueColorImplementor implements ColorImplementor {
   @override
-  Future<SpriteSheet> tintSprite(String assetPath) async {
-    final image = await Flame.images.load(assetPath);
-    final spriteSheet = SpriteSheet(
-      image: image,
-      srcSize: Vector2(32, 32),
+  ColorFilter getColorFilter() {
+    return ColorFilter.mode(
+      Colors.blue.withOpacity(0.5),
+      BlendMode.srcATop,
     );
-
-    final sprites = spriteSheet.sprites;
-    for (final sprite in sprites) {
-      sprite.paint.colorFilter = ColorFilter.mode(
-        Colors.blue.withOpacity(0.5),
-        BlendMode.srcATop,
-      );
-    }
-
-    return spriteSheet;
   }
 }
 
 class BlackColorImplementor implements ColorImplementor {
   @override
-  Future<SpriteSheet> tintSprite(String assetPath) async {
-    final image = await Flame.images.load(assetPath);
-    final spriteSheet = SpriteSheet(
-      image: image,
-      srcSize: Vector2(32, 32),
+  ColorFilter getColorFilter() {
+    return ColorFilter.mode(
+      Colors.black.withOpacity(0.5),
+      BlendMode.srcATop,
     );
-
-    final sprites = spriteSheet.sprites;
-    for (final sprite in sprites) {
-      sprite.paint.colorFilter = ColorFilter.mode(
-        Colors.black.withOpacity(0.5),
-        BlendMode.srcATop,
-      );
-    }
-
-    return spriteSheet;
   }
 }
 

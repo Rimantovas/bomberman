@@ -1,3 +1,4 @@
+import 'package:bomberman/game/rendering/sprite_sheet_cache.dart';
 import 'package:flame/components.dart';
 
 import '../../utils/app_asset.dart';
@@ -13,10 +14,11 @@ class RetroThemeBedrock extends Bedrock {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite(
-      AppAsset.bedrockWall, //todo change to retro theme
-      srcSize: Vector2(32, 32),
+    final spriteSheet = await SpriteSheetCache.getSpriteSheet(
+      AppAsset.bedrockWall,
+      Vector2(32, 32),
     );
+    sprite = spriteSheet.getSprite(0, 0);
   }
 }
 
@@ -26,9 +28,10 @@ class ComicThemeBedrock extends Bedrock {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite(
-      AppAsset.bedrockWall, //todo change to comic theme
-      srcSize: Vector2(32, 32),
+    final spriteSheet = await SpriteSheetCache.getSpriteSheet(
+      AppAsset.bedrockWall,
+      Vector2(32, 32),
     );
+    sprite = spriteSheet.getSprite(0, 0);
   }
 }

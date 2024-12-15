@@ -23,8 +23,8 @@ class RegularBomb extends Bomb {
     final explosion = RegularBombExplosion(
       gameRef: gameRef,
       position: position,
-      strength: strength,
-      branching: branching,
+      primary: primaryModifier,
+      secondary: secondaryModifier,
     );
     explosion.execute();
     gameRef.remove(this);

@@ -1,5 +1,6 @@
 import 'package:bomberman/game.dart';
 import 'package:bomberman/game/board_object/destruction_strategy.dart';
+import 'package:bomberman/game/rendering/sprite_sheet_cache.dart';
 import 'package:flame/components.dart';
 
 import '../../utils/app_asset.dart';
@@ -39,10 +40,11 @@ class ComicThemeDestroyable extends Destroyable {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite(
-      AppAsset.destroyableBox, //todo change to comic theme
-      srcSize: Vector2(32, 32),
+    final spriteSheet = await SpriteSheetCache.getSpriteSheet(
+      AppAsset.destroyableBox,
+      Vector2(32, 32),
     );
+    sprite = spriteSheet.getSprite(0, 0);
   }
 
   @override
@@ -56,10 +58,11 @@ class RetroThemeDestroyable extends Destroyable {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await gameRef.loadSprite(
-      AppAsset.destroyableBox, //todo change to retro theme
-      srcSize: Vector2(32, 32),
+    final spriteSheet = await SpriteSheetCache.getSpriteSheet(
+      AppAsset.destroyableBox,
+      Vector2(32, 32),
     );
+    sprite = spriteSheet.getSprite(0, 0);
   }
 
   @override

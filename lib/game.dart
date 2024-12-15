@@ -4,6 +4,8 @@ import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/facade/game_facade.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/player/player_manager.dart';
+import 'package:bomberman/game/rendering/performance_monitor.dart';
+import 'package:bomberman/game/rendering/sprite_sheet_cache.dart';
 import 'package:bomberman/src/player/bloc/player_manager_bloc.dart';
 import 'package:bomberman/src/player/models/player.dart';
 import 'package:flame/events.dart';
@@ -60,9 +62,11 @@ class BombermanGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    SpriteSheetCache.disable();
+    SpriteSheetPerformanceMonitor.startMonitoring();
+
     await super.onLoad();
     await initializeGame();
-    // await gameFacade.playerManager.waitForPlayersToLoad();
   }
 
   Future<void> initializeGame() async {
@@ -98,5 +102,18 @@ class BombermanGame extends FlameGame
 
   void updateMyPosition(Vector2 newPosition) {
     playerManagerBloc.updateMyPosition(newPosition);
+  }
+
+  // For testing cache impact
+  void toggleSpriteCache() {
+    if (SpriteSheetCache.isEnabled) {
+      SpriteSheetCache.disable();
+      SpriteSheetCache.clearCache();
+    } else {
+      SpriteSheetCache.enable();
+    }
+
+    SpriteSheetPerformanceMonitor.startMonitoring();
+    // ... reload logic ...
   }
 }
