@@ -17,6 +17,7 @@ class AppAsset {
   static String playerDeathFront = character('death', 'front');
 
   static String bombDynamite = item('dynamite');
+  static String bombLaser = item('laser'); // TODO(RIMAS): Add laser asset
   static String destroyableBox = item('box');
   static String bedrockWall = terrain('wall');
   static String rockWall = terrain('rock');

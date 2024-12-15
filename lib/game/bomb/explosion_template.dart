@@ -5,14 +5,14 @@ import 'package:flame/components.dart';
 abstract class BombExplosionTemplate {
   final BombermanGame gameRef;
   final Vector2 position;
-  final int strength;
-  final int branching;
+  final int primary;
+  final int secondary;
 
   BombExplosionTemplate({
     required this.gameRef,
     required this.position,
-    required this.strength,
-    required this.branching,
+    required this.primary,
+    required this.secondary,
   });
 
   // Template method that defines the algorithm's skeleton

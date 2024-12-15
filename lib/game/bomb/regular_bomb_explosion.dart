@@ -11,8 +11,8 @@ class RegularBombExplosion extends BombExplosionTemplate {
   RegularBombExplosion({
     required super.gameRef,
     required super.position,
-    required super.strength,
-    required super.branching,
+    required super.primary,
+    required super.secondary,
   });
 
   @override
@@ -21,8 +21,8 @@ class RegularBombExplosion extends BombExplosionTemplate {
     Set<String> visitedPositions = {
       _positionKey(position)
     }; // Track visited positions
-    int remainingStrength = strength - 1;
-    int remainingBranching = branching - 1;
+    int remainingPrimary = primary - 1;
+    int remainingSecondary = secondary - 1;
     List<Vector2> directions = [
       Vector2(1, 0),
       Vector2(-1, 0),
@@ -32,16 +32,16 @@ class RegularBombExplosion extends BombExplosionTemplate {
     directions.shuffle();
     Vector2 currentDirection = directions.first;
 
-    print('Remaining strength: $remainingStrength');
-    print('Remaining branching: $remainingBranching');
+    print('Remaining primary: $remainingPrimary');
+    print('Remaining secondary: $remainingSecondary');
     print('Initial path: $path');
     print('----------------------------');
 
-    while (remainingStrength > 0 && directions.isNotEmpty) {
+    while (remainingPrimary > 0 && directions.isNotEmpty) {
       Vector2? nextTile = _findNextTile(
         path.last,
         currentDirection,
-        remainingBranching > 0,
+        remainingSecondary > 0,
         visitedPositions,
       );
 
@@ -50,13 +50,13 @@ class RegularBombExplosion extends BombExplosionTemplate {
       if (nextTile != null) {
         path.add(nextTile);
         visitedPositions.add(_positionKey(nextTile));
-        remainingStrength--;
+        remainingPrimary--;
 
         Vector2 actualDirection =
             (nextTile - path[path.length - 2]) / GameMap.tileSize.toDouble();
         if (actualDirection != currentDirection) {
           currentDirection = actualDirection;
-          remainingBranching--;
+          remainingSecondary--;
         }
       } else {
         directions.remove(currentDirection);
