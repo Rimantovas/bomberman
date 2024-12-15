@@ -7,6 +7,7 @@ class PlaceBombCommand implements Command {
 
   @override
   void execute(Player player) {
+    print('PlaceBombCommand: execute');
     bombPosition = player.position.clone();
     player.placeBomb();
   }

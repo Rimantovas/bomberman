@@ -15,8 +15,6 @@ class PlayerRepository {
       data: data,
     );
 
-    print(response.statusCode);
-
     if (response.statusCode! > 300) {
       throw Exception(response.errorMessage);
     }

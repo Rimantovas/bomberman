@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:ui';
 
 import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
@@ -18,9 +18,11 @@ class RegularBombExplosion extends BombExplosionTemplate {
   @override
   List<Vector2> determineExplosionPath() {
     List<Vector2> path = [position];
+    Set<String> visitedPositions = {
+      _positionKey(position)
+    }; // Track visited positions
     int remainingStrength = strength - 1;
-    print('Remaining strength: $remainingStrength');
-    int remainingBranching = branching;
+    int remainingBranching = branching - 1;
     List<Vector2> directions = [
       Vector2(1, 0),
       Vector2(-1, 0),
@@ -28,22 +30,39 @@ class RegularBombExplosion extends BombExplosionTemplate {
       Vector2(0, -1)
     ];
     directions.shuffle();
+    Vector2 currentDirection = directions.first;
+
+    print('Remaining strength: $remainingStrength');
+    print('Remaining branching: $remainingBranching');
+    print('Initial path: $path');
+    print('----------------------------');
 
     while (remainingStrength > 0 && directions.isNotEmpty) {
-      Vector2? nextTile =
-          _findNextTile(path.last, directions, remainingBranching > 0);
+      Vector2? nextTile = _findNextTile(
+        path.last,
+        currentDirection,
+        remainingBranching > 0,
+        visitedPositions,
+      );
+
+      print('Computed next tile: $nextTile');
 
       if (nextTile != null) {
         path.add(nextTile);
+        visitedPositions.add(_positionKey(nextTile));
         remainingStrength--;
 
-        if (nextTile !=
-            path.last + directions.first * GameMap.tileSize.toDouble()) {
+        Vector2 actualDirection =
+            (nextTile - path[path.length - 2]) / GameMap.tileSize.toDouble();
+        if (actualDirection != currentDirection) {
+          currentDirection = actualDirection;
           remainingBranching--;
-          directions.shuffle();
         }
       } else {
-        directions.removeAt(0);
+        directions.remove(currentDirection);
+        if (directions.isNotEmpty) {
+          currentDirection = directions.first;
+        }
       }
     }
 
@@ -94,25 +113,100 @@ class RegularBombExplosion extends BombExplosionTemplate {
   }
 
   Vector2? _findNextTile(
-      Vector2 currentTile, List<Vector2> directions, bool canBranch) {
-    for (var direction in directions) {
-      Vector2 nextTile = currentTile + direction * GameMap.tileSize.toDouble();
-      if (_canPlaceExplosionTile(nextTile)) {
-        if (_isDestroyableObject(nextTile)) {
-          return nextTile;
+    Vector2 currentTile,
+    Vector2 currentDirection,
+    bool canBranch,
+    Set<String> visitedPositions,
+  ) {
+    // Helper function to check if a position has been visited
+    bool isUnvisited(Vector2 pos) =>
+        !visitedPositions.contains(_positionKey(pos));
+
+    // First, check if we can continue in the current direction
+    Vector2 nextTile =
+        currentTile + currentDirection * GameMap.tileSize.toDouble();
+
+    print('Next tile: $nextTile');
+    print('Can place explosion tile: ${_canPlaceExplosionTile(nextTile)}');
+    print('Is unvisited: ${isUnvisited(nextTile)}');
+    print('Has player at: ${_hasPlayerAt(nextTile)}');
+    print('Is destroyable object: ${_isDestroyableObject(nextTile)}');
+    print('Can branch: $canBranch');
+    print('----------------------------');
+
+    // Priority 1: Check for players in current direction
+    if (_canPlaceExplosionTile(nextTile) &&
+        isUnvisited(nextTile) &&
+        _hasPlayerAt(nextTile)) {
+      print('Priority 1: Returning next tile: $nextTile');
+      return nextTile;
+    }
+
+    // Priority 2: Check for destroyable objects in current direction
+    if (_canPlaceExplosionTile(nextTile) &&
+        isUnvisited(nextTile) &&
+        _isDestroyableObject(nextTile)) {
+      print('Priority 2: Returning next tile: $nextTile');
+      return nextTile;
+    }
+
+    // Priority 3: If can branch, check perpendicular directions for players
+    if (canBranch) {
+      Vector2 perpendicularDir = _getPerpendicularDirection(currentDirection);
+      for (var dir in [perpendicularDir, perpendicularDir * -1]) {
+        Vector2 branchTile = currentTile + dir * GameMap.tileSize.toDouble();
+        if (_canPlaceExplosionTile(branchTile) &&
+            isUnvisited(branchTile) &&
+            _hasPlayerAt(branchTile)) {
+          print('Priority 3: Returning next tile: $branchTile');
+          return branchTile;
         }
-        if (canBranch && Random().nextInt(3) == 0) {
-          Vector2 branchDirection = _getPerpendicularDirection(direction);
-          Vector2 branchTile =
-              currentTile + branchDirection * GameMap.tileSize.toDouble();
-          if (_canPlaceExplosionTile(branchTile)) {
-            return branchTile;
-          }
-        }
-        return nextTile;
       }
     }
+
+    // Priority 4: If can branch, check perpendicular directions for destroyables
+    if (canBranch) {
+      Vector2 perpendicularDir = _getPerpendicularDirection(currentDirection);
+      for (var dir in [perpendicularDir, perpendicularDir * -1]) {
+        Vector2 branchTile = currentTile + dir * GameMap.tileSize.toDouble();
+        if (_canPlaceExplosionTile(branchTile) &&
+            isUnvisited(branchTile) &&
+            _isDestroyableObject(branchTile)) {
+          print('Priority 4: Returning next tile: $branchTile');
+          return branchTile;
+        }
+      }
+    }
+
+    // Priority 5: Continue in current direction if possible
+    if (_canPlaceExplosionTile(nextTile) && isUnvisited(nextTile)) {
+      print('Priority 5: Returning next tile: $nextTile');
+      return nextTile;
+    }
+
+    // Priority 6: If can branch, try perpendicular directions
+    if (canBranch) {
+      Vector2 perpendicularDir = _getPerpendicularDirection(currentDirection);
+      for (var dir in [perpendicularDir, perpendicularDir * -1]) {
+        Vector2 branchTile = currentTile + dir * GameMap.tileSize.toDouble();
+        if (_canPlaceExplosionTile(branchTile) && isUnvisited(branchTile)) {
+          print('Priority 6: Returning next tile: $branchTile');
+          return branchTile;
+        }
+      }
+    }
+
     return null;
+  }
+
+  // Helper method to create a unique key for a position
+  String _positionKey(Vector2 position) => '${position.x},${position.y}';
+
+  bool _hasPlayerAt(Vector2 position) {
+    return gameRef.playerManager.myPlayer.toRect().overlaps(
+          Rect.fromLTWH(position.x, position.y, GameMap.tileSize.toDouble(),
+              GameMap.tileSize.toDouble()),
+        );
   }
 
   Vector2 _getPerpendicularDirection(Vector2 direction) {
@@ -144,7 +238,9 @@ class RegularBombExplosion extends BombExplosionTemplate {
         x >= 0 &&
         x < gameRef.gameMap.grid[0].length) {
       final boardObject = gameRef.gameMap.grid[y][x];
-      return boardObject == null || boardObject.canBeDestroyed();
+      return boardObject == null ||
+          boardObject.canBeDestroyed() ||
+          boardObject.canBeWalkedOn();
     }
     return false;
   }

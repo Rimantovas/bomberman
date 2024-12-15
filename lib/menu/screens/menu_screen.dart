@@ -39,8 +39,6 @@ class _MainMenuState extends State<MainMenu> {
     return BlocConsumer<GameSettingsBloc, GameSettingsState>(
       bloc: GetIt.I.get<GameSettingsBloc>(),
       listener: (context, state) {
-        print('GameSettingsState: $state');
-
         _audioManager.setVolume(state.volume);
         if (state.isMuted) {
           _audioManager.mute();

@@ -16,7 +16,6 @@ class AppKeyboardHandler {
     if (event is KeyDownEvent) {
       final command = _createCommand(event, keysPressed);
       if (command != null) {
-        command.execute(player);
         _history.push(command);
         return command;
       }

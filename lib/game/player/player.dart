@@ -49,7 +49,6 @@ class Player extends SpriteAnimationComponent
   }
 
   void _updateMovement(double dt) {
-    // print('position: ${position.x} ${position.y}');
     velocity.setZero();
     switch (_state) {
       case MovingState.up:
@@ -144,7 +143,6 @@ class Player extends SpriteAnimationComponent
       secondaryModifier: 1,
     );
     gameRef.add(bomb);
-
     gameRef.add(
       TimerComponent(
         period: bomb.explosionDelay,
