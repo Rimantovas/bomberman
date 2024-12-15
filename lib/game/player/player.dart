@@ -1,4 +1,5 @@
 import 'package:bomberman/game.dart';
+import 'package:bomberman/game/collision/collision_handler.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player_animation_strategy.dart';
@@ -6,7 +7,6 @@ import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
-import '../board_object/board_object.dart';
 import '../bomb/bomb.dart';
 import '../bomb/bomb_factory.dart';
 
@@ -23,6 +23,8 @@ class Player extends SpriteAnimationComponent
 
   Vector2? lastCollisionPosition;
 
+  late final CollisionHandler _collisionHandler;
+
   Player({
     required Vector2 position,
     required this.id,
@@ -32,6 +34,18 @@ class Player extends SpriteAnimationComponent
     animationStrategy = PlayerAnimationStrategy(
       colorScheme: PlayerColorScheme(colorImplementor),
     );
+
+    //* CHAIN OF RESPONSIBILITY PATTERN
+    final wallHandler = WallCollisionHandler();
+    final bombHandler = BombCollisionHandler();
+    final explosionHandler = ExplosionCollisionHandler();
+    final powerUpHandler = PowerUpCollisionHandler();
+
+    wallHandler.next = bombHandler;
+    bombHandler.next = explosionHandler;
+    explosionHandler.next = powerUpHandler;
+
+    _collisionHandler = wallHandler;
   }
 
   @override
@@ -157,49 +171,7 @@ class Player extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is BoardObject) {
-      if (other.canBeWalkedOn()) {
-        return;
-      }
-
-      /// Before setting the last collision position, check if it is in the direction of where the player is moving
-      /// For the logic, check if other.position.y is for example more than player position.y and moving state is down
-      /// Then we don't want to set the last collision position
-      final Vector2 collisionNormal = (position - other.position).normalized();
-      if (_state == MovingState.down &&
-          other.position.y > position.y &&
-          other.position.x == position.x) {
-        lastCollisionPosition = other.position.clone();
-      } else if (_state == MovingState.up &&
-          other.position.y < position.y &&
-          other.position.x == position.x) {
-        lastCollisionPosition = other.position.clone();
-      } else if (_state == MovingState.left &&
-          other.position.x < position.x &&
-          other.position.y == position.y) {
-        lastCollisionPosition = other.position.clone();
-      } else if (_state == MovingState.right &&
-          other.position.x > position.x &&
-          other.position.y == position.y) {
-        lastCollisionPosition = other.position.clone();
-      }
-
-      if (collisionNormal.y.abs() > collisionNormal.x.abs()) {
-        velocity.y = 0;
-        if (collisionNormal.y < 0) {
-          position.y = other.position.y - size.y;
-        } else {
-          position.y = other.position.y + other.size.y;
-        }
-      } else {
-        velocity.x = 0;
-        if (collisionNormal.x < 0) {
-          position.x = other.position.x - size.x;
-        } else {
-          position.x = other.position.x + other.size.x;
-        }
-      }
-    }
+    _collisionHandler.handleCollision(this, intersectionPoints, other);
   }
 
   void removeBombAt(Vector2 position) {
