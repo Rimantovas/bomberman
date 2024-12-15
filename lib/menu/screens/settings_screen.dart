@@ -15,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => EditSettingsBloc(GetIt.I.get<GameSettingsBloc>()),
-      child: BlocBuilder<EditSettingsBloc, EditSettingsState>(
+      child: BlocBuilder<EditSettingsBloc, GameSettingsState>(
         builder: (context, state) {
           return Scaffold(
             body: Container(
@@ -124,9 +124,11 @@ class SettingsScreen extends StatelessWidget {
                                   overlayColor: Colors.white.withOpacity(0.3),
                                 ),
                                 child: Slider(
-                                  value: 0.5, // Placeholder value
+                                  value: state.volume.toDouble(),
                                   onChanged: (value) {
-                                    // Audio logic will be added later
+                                    context
+                                        .read<EditSettingsBloc>()
+                                        .setVolume(value);
                                   },
                                 ),
                               ),
@@ -173,7 +175,7 @@ class SettingsScreen extends StatelessWidget {
       builder: (dialogContext) {
         return BlocProvider.value(
           value: context.read<EditSettingsBloc>(),
-          child: BlocListener<EditSettingsBloc, EditSettingsState>(
+          child: BlocListener<EditSettingsBloc, GameSettingsState>(
             listener: (context, state) {},
             child: RevertDialog(
               onRevert: () {

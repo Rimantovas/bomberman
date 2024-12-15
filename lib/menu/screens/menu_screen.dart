@@ -36,8 +36,18 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GameSettingsBloc, GameSettingsState>(
+    return BlocConsumer<GameSettingsBloc, GameSettingsState>(
       bloc: GetIt.I.get<GameSettingsBloc>(),
+      listener: (context, state) {
+        print('GameSettingsState: $state');
+
+        _audioManager.setVolume(state.volume);
+        if (state.isMuted) {
+          _audioManager.mute();
+        } else {
+          _audioManager.unmute();
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           body: Container(

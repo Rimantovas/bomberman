@@ -140,8 +140,8 @@ class Player extends SpriteAnimationComponent
       BombType.regular,
       position: position.clone(),
       colorScheme: BombColorScheme(colorImplementor),
-      primaryModifier: 0,
-      secondaryModifier: 0,
+      primaryModifier: 2,
+      secondaryModifier: 1,
     );
     gameRef.add(bomb);
 

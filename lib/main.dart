@@ -1,6 +1,6 @@
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/menu/bloc/game_settings_bloc.dart';
-import 'package:bomberman/menu/menu_screen.dart';
+import 'package:bomberman/menu/screens/menu_screen.dart';
 import 'package:bomberman/src/session/bloc/session_bloc.dart';
 import 'package:bomberman/utils/app_asset.dart';
 import 'package:bomberman/utils/http/http_client.dart';
