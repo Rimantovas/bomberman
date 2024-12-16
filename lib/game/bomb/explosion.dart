@@ -1,11 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:bomberman/game/bomb/timed_effect.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class Explosion extends TimedEffect {
-  Explosion({required super.position}) : super(duration: 0.5);
+  Explosion({required super.position}) : super(duration: 0.5) {
+    add(RectangleHitbox());
+  }
 
   @override
   void render(Canvas canvas) {

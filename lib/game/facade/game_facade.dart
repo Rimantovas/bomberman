@@ -25,7 +25,7 @@ class GameFacade {
 
   Future<void> _initializeMap(List<String> asciiMap, GameTheme theme) async {
     gameMap = GameMap(asciiMap: asciiMap, theme: theme);
-    await gameMap.initStart();
+    await gameMap.initGame();
   }
 
   Future<void> _initializePlayers(String playerId) async {

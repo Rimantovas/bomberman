@@ -36,7 +36,7 @@ class DelayedDestructionStrategy implements DestructionStrategy {
   ) {
     gameRef.add(
       TimerComponent(
-        period: 500,
+        period: 0.5,
         onTick: () {
           gameRef.gameMap.remove(gameRef.gameMap.grid[gridY][gridX]!);
           gameRef.gameMap.grid[gridY][gridX] = null;
@@ -63,7 +63,8 @@ class BombAppearDestructionStrategy implements DestructionStrategy {
       secondaryModifier: 0,
     );
     gameRef.add(bomb);
-
+    gameRef.gameMap.remove(gameRef.gameMap.grid[gridY][gridX]!);
+    gameRef.gameMap.grid[gridY][gridX] = null;
     gameRef.add(
       TimerComponent(
         period: bomb.explosionDelay,
@@ -91,8 +92,9 @@ class DestroyableAppearDestructionStrategy implements DestructionStrategy {
 
     gameRef.add(
       TimerComponent(
-        period: 500,
+        period: 0.5,
         onTick: () {
+          print('XXXX DESTROYABLE APPEAR');
           gameRef.add(clonedDestroyable);
           gameRef.gameMap.grid[gridY][gridX] = clonedDestroyable;
         },

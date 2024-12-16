@@ -30,6 +30,11 @@ class AudioManager {
     await _context.changeState(AudioLoadingState(_context));
   }
 
+  Future<void> playEffect(String assetPath) async {
+    final source = await _context.soloud.loadAsset(assetPath);
+    await _context.soloud.play(source);
+  }
+
   Future<void> play() async => await _context.play();
   Future<void> pause() async => await _context.pause();
   Future<void> mute() async => await _context.mute();

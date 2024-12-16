@@ -1,5 +1,6 @@
 import 'package:bomberman/game.dart';
 import 'package:bomberman/game/rendering/color_scheme.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 enum BombType { regular, remote, laser }
@@ -17,7 +18,9 @@ abstract class Bomb extends SpriteAnimationComponent
     required this.explosionDelay,
     required Vector2 position,
     required this.colorScheme,
-  }) : super(position: position, size: Vector2(32, 32));
+  }) : super(position: position, size: Vector2(32, 32)) {
+    add(RectangleHitbox());
+  }
 
   String get spritePath;
 

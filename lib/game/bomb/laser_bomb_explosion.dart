@@ -1,4 +1,6 @@
 import 'package:bomberman/game/board_object/destroyable.dart';
+import 'package:bomberman/game/board_object/explosion_damage_visitor.dart';
+import 'package:bomberman/game/board_object/explosion_sound_visitor.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
 import 'package:bomberman/game/bomb/explosion_template.dart';
 import 'package:bomberman/game/map/game_map.dart';
@@ -80,14 +82,10 @@ class LaserBombExplosion extends BombExplosionTemplate {
           x >= 0 &&
           x < gameRef.gameMap.grid[0].length) {
         final boardObject = gameRef.gameMap.grid[y][x];
-        if (boardObject != null && boardObject.canBeDestroyed()) {
-          if (boardObject is Destroyable) {
-            boardObject.executeDestruction(gameRef, y, x);
-          } else {
-            gameRef.gameMap.remove(gameRef.gameMap.grid[y][x]!);
-            gameRef.gameMap.grid[y][x] = null;
-          }
-        }
+        final damageVisitor = ExplosionDamageVisitor();
+        final soundVisitor = ExplosionSoundVisitor();
+        boardObject?.accept(damageVisitor, gameRef, y, x);
+        boardObject?.accept(soundVisitor, gameRef, y, x);
       }
 
       if (gameRef.playerManager.myPlayer.toRect().overlaps(

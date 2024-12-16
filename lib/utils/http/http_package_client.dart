@@ -54,7 +54,6 @@ class HttpPackageClient implements HttpClient {
 
       return httpResponse;
     } catch (e, s) {
-      print(s);
       var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       error = _runErrorInterceptors(error);
       throw error;
@@ -78,8 +77,6 @@ class HttpPackageClient implements HttpClient {
 
       return httpResponse;
     } catch (e, s) {
-      print(s);
-
       var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       error = _runErrorInterceptors(error);
       throw error;

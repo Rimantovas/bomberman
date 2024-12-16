@@ -78,9 +78,7 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState>
         newPosition.x.toInt(),
         newPosition.y.toInt(),
       ));
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override

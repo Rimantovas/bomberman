@@ -1,6 +1,7 @@
 import 'package:bomberman/game/board_object/board_object.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
+import 'package:bomberman/game/collision/collision_visitor.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/game/useless/objects/power_up.dart';
@@ -9,6 +10,7 @@ import 'package:flame/components.dart';
 //* CHAIN OF RESPONSIBILITY PATTERN
 abstract class CollisionHandler {
   CollisionHandler? next;
+  CollisionSoundVisitor soundVisitor = CollisionSoundVisitor();
 
   void handleCollision(
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -36,6 +38,7 @@ class WallCollisionHandler extends CollisionHandler {
   void process(
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is BoardObject) {
+      soundVisitor.visitWall(player, other);
       final Vector2 collisionNormal =
           (player.position - other.position).normalized();
 
@@ -88,6 +91,7 @@ class BombCollisionHandler extends CollisionHandler {
   @override
   void process(
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
+    soundVisitor.visitBomb(player, other as Bomb);
     // For now, bombs can be walked through
     // In the future, we might want to add logic for player-specific bomb collision
   }
@@ -104,6 +108,7 @@ class ExplosionCollisionHandler extends CollisionHandler {
   void process(
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
     print('Player hit by explosion!');
+    soundVisitor.visitExplosion(player, other as Explosion);
     // TODO: Add damage/death logic
   }
 }
@@ -119,6 +124,7 @@ class PowerUpCollisionHandler extends CollisionHandler {
   void process(
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
     print('Player collected a power-up!');
+    soundVisitor.visitPowerUp(player, other as PowerUp);
     // TODO: Add power-up collection logic
   }
 }
