@@ -72,8 +72,7 @@ class _MainMenuState extends State<MainMenu> {
                     text: 'Play',
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const GameScreen()),
+                      MaterialPageRoute(builder: (context) => GameScreen()),
                     ),
                   ),
                   const SizedBox(height: 20),

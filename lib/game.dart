@@ -34,9 +34,9 @@ class BombermanGame extends FlameGame
     required this.playerId,
     required this.sessionId,
     required this.initialPlayers,
+    required this.gameFacade,
   }) {
     playerManagerBloc = PlayerManagerBloc(playerId);
-    gameFacade = GameFacade();
 
     add(FlameBlocProvider<PlayerManagerBloc, PlayerManagerState>.value(
       value: playerManagerBloc,

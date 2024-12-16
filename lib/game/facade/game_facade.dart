@@ -1,5 +1,6 @@
 import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/map/game_map.dart';
+import 'package:bomberman/game/movement/interpreter/command_interpreter.dart';
 import 'package:bomberman/game/movement/keyboard_handler.dart';
 import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/game/player/player_manager.dart';
@@ -12,15 +13,19 @@ class GameFacade {
   late final PlayerManager playerManager;
   late final GameMap gameMap;
   late final AppKeyboardHandler keyboardHandler;
+  late final CommandInterpreter commandInterpreter;
+  var isInited = false;
 
   Future<void> initializeGame({
     required List<String> asciiMap,
     required String playerId,
     required GameTheme theme,
   }) async {
+    if (isInited) return;
     await _initializeMap(asciiMap, theme);
     await _initializePlayers(playerId);
     _initializeControls(playerId);
+    isInited = true;
   }
 
   Future<void> _initializeMap(List<String> asciiMap, GameTheme theme) async {
@@ -35,6 +40,8 @@ class GameFacade {
       position: Vector2(32, 32),
       colorImplementor: BlueColorImplementor(),
     );
+    commandInterpreter = CommandInterpreter(CommandParser(Tokenizer()));
+
     await playerManager.setMyPlayer(myPlayer);
   }
 

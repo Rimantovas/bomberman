@@ -1,3 +1,4 @@
+import 'package:bomberman/game/facade/game_facade.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/menu/bloc/game_settings_bloc.dart';
 import 'package:bomberman/menu/screens/menu_screen.dart';
@@ -72,55 +73,107 @@ class _MyAppState extends State<MyApp> {
 }
 
 class GameScreen extends StatelessWidget {
-  const GameScreen({super.key});
+  GameScreen({super.key});
+  final _controller = TextEditingController();
+  final gameFacade = GameFacade();
+  final focusNode = FocusNode();
+
+  void _handleInput() {
+    String input = _controller.text;
+    try {
+      focusNode.requestFocus();
+      gameFacade.commandInterpreter
+          .interpret(input, gameFacade.playerManager.myPlayer);
+    } catch (e) {
+      print(e);
+    }
+
+    _controller.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/${AppAsset.rockWall}',
-              repeat: ImageRepeat.repeat,
-              fit: BoxFit.none,
+      body: GestureDetector(
+        onTap: () => focusNode.requestFocus(),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/${AppAsset.rockWall}',
+                repeat: ImageRepeat.repeat,
+                fit: BoxFit.none,
+              ),
             ),
-          ),
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: AspectRatio(
-                aspectRatio: GameMap.gameSize.x / GameMap.gameSize.y,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: SizedBox(
-                    width: GameMap.gameSize.x,
-                    height: GameMap.gameSize.y,
-                    child: BlocProvider(
-                      create: (context) => SessionBloc()..joinSession(),
-                      child: BlocBuilder<SessionBloc, SessionState>(
-                        builder: (context, state) {
-                          if (state.isLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: AspectRatio(
+                  aspectRatio: GameMap.gameSize.x / GameMap.gameSize.y,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: SizedBox(
+                      width: GameMap.gameSize.x,
+                      height: GameMap.gameSize.y,
+                      child: BlocProvider(
+                        create: (context) => SessionBloc()..joinSession(),
+                        child: BlocBuilder<SessionBloc, SessionState>(
+                          builder: (context, state) {
+                            if (state.isLoading) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return GameWidget(
+                              focusNode: focusNode,
+                              autofocus: true,
+                              game: BombermanGame(
+                                playerId: state.playerId ?? '',
+                                sessionId: state.sessionId ?? '',
+                                initialPlayers: state.initialPlayers,
+                                gameFacade: gameFacade,
+                              ),
                             );
-                          }
-                          return GameWidget(
-                            game: BombermanGame(
-                              playerId: state.playerId ?? '',
-                              sessionId: state.sessionId ?? '',
-                              initialPlayers: state.initialPlayers,
-                            ),
-                          );
-                        },
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    height: 50,
+                    child: TextField(
+                      controller: _controller,
+                      onSubmitted: (value) => {
+                        _handleInput(),
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Enter command',
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _handleInput(),
+                    child: const Text('Execute'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
