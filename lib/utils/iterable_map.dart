@@ -2,7 +2,7 @@
 class MapIterator implements Iterator {
   final Map _map;
 
-  MapIterator() : _map = {};
+  MapIterator(Map map) : _map = map;
 
   int _currentIndex = -1;
 

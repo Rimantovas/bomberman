@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bomberman/utils/iterable_map.dart';
 import 'package:http/http.dart' as http;
 
 import 'http_client.dart';
@@ -40,19 +41,20 @@ class HttpPackageClient implements HttpClient {
   Future<APIResponse<dynamic>> post(String path, {dynamic data}) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
-      var request = HttpRequest(path: path, data: data);
+      var request = HttpRequest(path: path, data: MapIterator(data));
       request = _runRequestInterceptors(request);
 
       final response = await adaptee.post(
         uri,
-        body: jsonEncode(request.data),
+        body: jsonEncode(request.data?.data),
         headers: request.headers,
       );
       var httpResponse = _handleResponse(response);
       httpResponse = _runResponseInterceptors(httpResponse);
 
       return httpResponse;
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       error = _runErrorInterceptors(error);
       throw error;
@@ -63,11 +65,11 @@ class HttpPackageClient implements HttpClient {
   Future<APIResponse<dynamic>> patch(String path, {dynamic data}) async {
     try {
       final uri = Uri.parse(_buildUrl(path));
-      var request = HttpRequest(path: path, data: data);
+      var request = HttpRequest(path: path, data: MapIterator(data));
       request = _runRequestInterceptors(request);
       final response = await adaptee.patch(
         uri,
-        body: jsonEncode(request.data),
+        body: jsonEncode(request.data?.data),
         headers: request.headers,
       );
 
@@ -75,7 +77,9 @@ class HttpPackageClient implements HttpClient {
       httpResponse = _runResponseInterceptors(httpResponse);
 
       return httpResponse;
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
+
       var error = APIResponse(errorMessage: e.toString(), statusCode: 500);
       error = _runErrorInterceptors(error);
       throw error;

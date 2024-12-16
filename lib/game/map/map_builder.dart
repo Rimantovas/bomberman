@@ -1,7 +1,6 @@
 import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/game/board_object/board_object_factory.dart';
 import 'package:bomberman/game/board_object/destroyable.dart';
-import 'package:bomberman/game/board_object/destruction_strategy.dart';
 import 'package:bomberman/game/board_object/destruction_strategy_factory.dart';
 import 'package:bomberman/game/map/map.dart';
 import 'package:flame/components.dart';

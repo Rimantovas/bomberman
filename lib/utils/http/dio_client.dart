@@ -1,3 +1,4 @@
+import 'package:bomberman/utils/iterable_map.dart';
 import 'package:dio/dio.dart' as dio;
 
 import 'http_client.dart';
@@ -73,7 +74,7 @@ class adapteeInterceptorAdapter extends dio.Interceptor {
       path: options.path,
       headers:
           options.headers.map((key, value) => MapEntry(key, value.toString())),
-      data: options.data,
+      data: MapIterator(options.data),
       queryParameters: options.queryParameters,
     ));
     super.onRequest(options, handler);

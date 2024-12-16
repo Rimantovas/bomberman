@@ -5,6 +5,7 @@ import 'package:bomberman/src/session/bloc/session_bloc.dart';
 import 'package:bomberman/utils/app_asset.dart';
 import 'package:bomberman/utils/http/http_client.dart';
 import 'package:bomberman/utils/http/http_package_client.dart';
+import 'package:bomberman/utils/key_value/key_value_storage_service.dart';
 import 'package:bomberman/utils/logger.dart';
 import 'package:bomberman/utils/logger/logger_config.dart';
 import 'package:flame/game.dart';
@@ -53,6 +54,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    GetIt.I.registerSingleton(KeyValueStorageService());
+
     GetIt.I.registerSingleton<GameSettingsBloc>(GameSettingsBloc());
   }
 

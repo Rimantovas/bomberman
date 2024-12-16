@@ -39,7 +39,7 @@ class SnakeCaseInterceptor extends HttpInterceptor {
     final newRequest = HttpRequest(
         path: request.path,
         queryParameters: request.queryParameters,
-        data: _convertToSnakeCase(request.data),
+        data: MapIterator(_convertToSnakeCase(request.data)),
         headers: request.headers);
     return newRequest;
   }
