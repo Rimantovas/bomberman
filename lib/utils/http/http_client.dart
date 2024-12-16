@@ -1,5 +1,7 @@
 //* [PATTERN] Adapter Pattern
 
+import 'package:bomberman/utils/iterable_map.dart';
+
 abstract class HttpClient {
   Future<APIResponse> get(String path, {Map<String, dynamic>? queryParameters});
   Future<APIResponse> post(String path, {dynamic data});
@@ -18,7 +20,7 @@ abstract class HttpInterceptor {
 class HttpRequest {
   final String path;
   final Map<String, String> headers;
-  final dynamic data;
+  final MapIterator? data;
   final Map<String, dynamic>? queryParameters;
 
   HttpRequest({
