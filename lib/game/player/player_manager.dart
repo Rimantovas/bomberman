@@ -1,16 +1,27 @@
 import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 class PlayerManager extends Component {
   final Map<String, Player> _otherPlayers = {};
   late Player myPlayer;
   bool _isLoaded = false;
+  final int myHealth = 100;
+  late TextComponent healthText;
 
   Future<void> setMyPlayer(Player player) async {
     myPlayer = player;
     await add(myPlayer);
     _isLoaded = true;
+    healthText = TextComponent(
+        text: 'Health: $myHealth',
+        position: Vector2(
+          0,
+          0,
+        ),
+        textRenderer: TextPaint(style: const TextStyle(fontSize: 16)));
+    await add(healthText);
   }
 
   Future<void> addOtherPlayer(String id, Vector2 initialPosition) async {
@@ -33,6 +44,10 @@ class PlayerManager extends Component {
         removePlayer(id);
       }
     }
+  }
+
+  void updateMyHealth(int newHealth) {
+    healthText.text = 'Health: $newHealth';
   }
 
   void removePlayer(String id) {

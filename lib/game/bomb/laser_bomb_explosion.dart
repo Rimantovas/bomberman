@@ -65,7 +65,7 @@ class LaserBombExplosion extends BombExplosionTemplate {
   @override
   void createExplosions(List<Vector2> explosionTiles) {
     for (var tile in explosionTiles) {
-      final explosion = Explosion(position: tile);
+      final explosion = Explosion(position: tile, damage: 20);
       gameRef.add(explosion);
     }
   }
@@ -89,7 +89,7 @@ class LaserBombExplosion extends BombExplosionTemplate {
       }
 
       if (gameRef.playerManager.myPlayer.toRect().overlaps(
-            Explosion(position: tile).toRect(),
+            Explosion(position: tile, damage: 20).toRect(),
           )) {
         print('Player hit by laser!');
       }

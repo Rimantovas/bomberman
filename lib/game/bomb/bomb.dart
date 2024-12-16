@@ -11,12 +11,14 @@ abstract class Bomb extends SpriteAnimationComponent
   final int secondaryModifier;
   final double explosionDelay;
   final ColorScheme colorScheme;
+  final int damage;
 
   Bomb({
     required this.primaryModifier,
     required this.secondaryModifier,
     required this.explosionDelay,
     required Vector2 position,
+    required this.damage,
     required this.colorScheme,
   }) : super(position: position, size: Vector2(32, 32)) {
     add(RectangleHitbox());

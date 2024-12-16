@@ -31,6 +31,9 @@ class PlayerModelMapper extends ClassMapperBase<PlayerModel> {
   static int _$positionY(PlayerModel v) => v.positionY;
   static const Field<PlayerModel, int> _f$positionY =
       Field('positionY', _$positionY, key: 'position_y');
+  static int _$health(PlayerModel v) => v.health;
+  static const Field<PlayerModel, int> _f$health =
+      Field('health', _$health, opt: true, def: 100);
 
   @override
   final MappableFields<PlayerModel> fields = const {
@@ -38,11 +41,13 @@ class PlayerModelMapper extends ClassMapperBase<PlayerModel> {
     #sessionId: _f$sessionId,
     #positionX: _f$positionX,
     #positionY: _f$positionY,
+    #health: _f$health,
   };
 
   static PlayerModel _instantiate(DecodingData data) {
     return PlayerModel(data.dec(_f$id), data.dec(_f$sessionId),
-        data.dec(_f$positionX), data.dec(_f$positionY));
+        data.dec(_f$positionX), data.dec(_f$positionY),
+        health: data.dec(_f$health));
   }
 
   @override
@@ -96,7 +101,12 @@ extension PlayerModelValueCopy<$R, $Out>
 
 abstract class PlayerModelCopyWith<$R, $In extends PlayerModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id, String? sessionId, int? positionX, int? positionY});
+  $R call(
+      {String? id,
+      String? sessionId,
+      int? positionX,
+      int? positionY,
+      int? health});
   PlayerModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -109,19 +119,26 @@ class _PlayerModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PlayerModel> $mapper =
       PlayerModelMapper.ensureInitialized();
   @override
-  $R call({String? id, String? sessionId, int? positionX, int? positionY}) =>
+  $R call(
+          {String? id,
+          String? sessionId,
+          int? positionX,
+          int? positionY,
+          int? health}) =>
       $apply(FieldCopyWithData({
         if (id != null) #id: id,
         if (sessionId != null) #sessionId: sessionId,
         if (positionX != null) #positionX: positionX,
-        if (positionY != null) #positionY: positionY
+        if (positionY != null) #positionY: positionY,
+        if (health != null) #health: health
       }));
   @override
   PlayerModel $make(CopyWithData data) => PlayerModel(
       data.get(#id, or: $value.id),
       data.get(#sessionId, or: $value.sessionId),
       data.get(#positionX, or: $value.positionX),
-      data.get(#positionY, or: $value.positionY));
+      data.get(#positionY, or: $value.positionY),
+      health: data.get(#health, or: $value.health));
 
   @override
   PlayerModelCopyWith<$R2, PlayerModel, $Out2> $chain<$R2, $Out2>(

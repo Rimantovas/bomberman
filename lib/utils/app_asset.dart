@@ -17,11 +17,13 @@ class AppAsset {
   static String playerDeathFront = character('death', 'front');
 
   static String bombDynamite = item('dynamite');
-  static String bombLaser = item('laser'); // TODO(RIMAS): Add laser asset
+  static String bombLaser =
+      item('super_dynamite'); // TODO(RIMAS): Add laser asset
   static String destroyableBox = item('box');
   static String bedrockWall = terrain('wall');
   static String rockWall = terrain('rock');
   static String grass = terrain('grass');
+  static String powerUp = terrain('powerup');
 
   static String menuBackground(GameTheme theme) =>
       'assets/images/menu_bg_${theme.name}.png';

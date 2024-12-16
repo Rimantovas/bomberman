@@ -1,14 +1,17 @@
+import 'package:bomberman/game.dart';
 import 'package:bomberman/game/board_object/board_object.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
 import 'package:bomberman/game/collision/collision_visitor.dart';
+import 'package:bomberman/game/mediator/game_mediator.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player.dart';
 import 'package:bomberman/game/useless/objects/power_up.dart';
 import 'package:flame/components.dart';
 
 //* CHAIN OF RESPONSIBILITY PATTERN
-abstract class CollisionHandler {
+abstract class CollisionHandler extends Component
+    with HasGameRef<BombermanGame> {
   CollisionHandler? next;
   CollisionSoundVisitor soundVisitor = CollisionSoundVisitor();
 
@@ -109,6 +112,9 @@ class ExplosionCollisionHandler extends CollisionHandler {
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
     print('Player hit by explosion!');
     soundVisitor.visitExplosion(player, other as Explosion);
+    gameRef.remove(other);
+    GameMediator(player, other, null).notify(GameEvent.explosion);
+
     // TODO: Add damage/death logic
   }
 }
@@ -125,6 +131,9 @@ class PowerUpCollisionHandler extends CollisionHandler {
       Player player, Set<Vector2> intersectionPoints, PositionComponent other) {
     print('Player collected a power-up!');
     soundVisitor.visitPowerUp(player, other as PowerUp);
+    gameRef.remove(other);
+    GameMediator(player, null, other).notify(GameEvent.powerupCollect);
+
     // TODO: Add power-up collection logic
   }
 }

@@ -6,9 +6,11 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class Explosion extends TimedEffect {
-  Explosion({required super.position}) : super(duration: 0.5) {
+  Explosion({required super.position, required this.damage})
+      : super(duration: 0.5) {
     add(RectangleHitbox());
   }
+  final int damage;
 
   @override
   void render(Canvas canvas) {

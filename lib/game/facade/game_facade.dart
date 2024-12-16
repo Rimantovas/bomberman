@@ -49,7 +49,7 @@ class GameFacade {
     keyboardHandler = AppKeyboardHandler(playerManager.myPlayer);
   }
 
-  void updatePlayers(List<PlayerModel> otherPlayers) {
+  void updatePlayers(List<PlayerModel> otherPlayers, int myHealth) {
     for (final player in otherPlayers) {
       if (playerManager.getPlayer(player.id) == null) {
         _addPlayer(player);
@@ -58,6 +58,7 @@ class GameFacade {
       }
     }
     playerManager.removePlayersNotIn(otherPlayers.map((p) => p.id).toList());
+    playerManager.updateMyHealth(myHealth);
   }
 
   void _addPlayer(PlayerModel player) {

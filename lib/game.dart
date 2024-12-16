@@ -30,12 +30,12 @@ List<String> asciiMap = [
 
 class BombermanGame extends FlameGame
     with KeyboardEvents, HasCollisionDetection {
-  BombermanGame({
-    required this.playerId,
-    required this.sessionId,
-    required this.initialPlayers,
-    required this.gameFacade,
-  }) {
+  BombermanGame(
+      {required this.playerId,
+      required this.sessionId,
+      required this.initialPlayers,
+      required this.gameFacade,
+      bo}) {
     playerManagerBloc = PlayerManagerBloc(playerId);
 
     add(FlameBlocProvider<PlayerManagerBloc, PlayerManagerState>.value(
@@ -43,7 +43,7 @@ class BombermanGame extends FlameGame
       children: [
         FlameBlocListener<PlayerManagerBloc, PlayerManagerState>(
           onNewState: (state) {
-            gameFacade.updatePlayers(state.otherPlayers);
+            gameFacade.updatePlayers(state.otherPlayers, state.myHealth);
           },
         ),
       ],
@@ -66,6 +66,7 @@ class BombermanGame extends FlameGame
     SpriteSheetPerformanceMonitor.startMonitoring();
 
     await super.onLoad();
+
     await initializeGame();
   }
 
@@ -102,6 +103,10 @@ class BombermanGame extends FlameGame
 
   void updateMyPosition(Vector2 newPosition) {
     playerManagerBloc.updateMyPosition(newPosition);
+  }
+
+  void updatePlayerHealth(String playerId, int health) {
+    playerManagerBloc.updatePlayerHealth(playerId, health);
   }
 
   // For testing cache impact

@@ -10,8 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PlayerManagerState {
   final List<PlayerModel> otherPlayers;
   final bool isLoading;
+  final int myHealth;
 
-  PlayerManagerState({this.otherPlayers = const [], this.isLoading = false});
+  PlayerManagerState(
+      {this.otherPlayers = const [],
+      this.isLoading = false,
+      this.myHealth = 100});
 }
 
 class PlayerManagerBloc extends Cubit<PlayerManagerState>
@@ -38,6 +42,7 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState>
   void onPlayerMoved(String id, int positionX, int positionY) {
     final oldPlayers = List<PlayerModel>.from(state.otherPlayers);
     emit(PlayerManagerState(
+      myHealth: state.myHealth,
       otherPlayers: oldPlayers.map((e) {
         if (e.id == id) {
           return e.copyWith(
@@ -56,6 +61,7 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState>
 
     if (!state.otherPlayers.any((p) => p.id == player.id)) {
       emit(PlayerManagerState(
+        myHealth: state.myHealth,
         otherPlayers: [...state.otherPlayers, player],
         isLoading: false,
       ));
@@ -66,6 +72,7 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState>
   void onPlayerLeft(String id) {
     final oldPlayers = List<PlayerModel>.from(state.otherPlayers);
     emit(PlayerManagerState(
+      myHealth: state.myHealth,
       otherPlayers:
           oldPlayers.where((player) => player.id != id).toList(growable: false),
       isLoading: false,
@@ -79,6 +86,24 @@ class PlayerManagerBloc extends Cubit<PlayerManagerState>
         newPosition.y.toInt(),
       ));
     } catch (e) {}
+  }
+
+  void updatePlayerHealth(String id, int health) {
+    if (id == _myPlayerId) {
+      emit(PlayerManagerState(
+          myHealth: health, otherPlayers: state.otherPlayers));
+      return;
+    }
+    final oldPlayers = List<PlayerModel>.from(state.otherPlayers);
+    emit(PlayerManagerState(
+      myHealth: state.myHealth,
+      otherPlayers: oldPlayers.map((e) {
+        if (e.id == id) {
+          return e.copyWith();
+        }
+        return e;
+      }).toList(),
+    ));
   }
 
   @override

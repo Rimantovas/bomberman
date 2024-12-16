@@ -4,6 +4,7 @@ import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player_animation_strategy.dart';
 import 'package:bomberman/game/rendering/color_scheme.dart';
+import 'package:bomberman/game/useless/objects/power_up.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -24,6 +25,8 @@ class Player extends SpriteAnimationComponent
   Vector2? lastCollisionPosition;
 
   late final CollisionHandler _collisionHandler;
+  var health = 100;
+  var laserBombsCount = 0;
 
   Player({
     required Vector2 position,
@@ -40,12 +43,30 @@ class Player extends SpriteAnimationComponent
     final bombHandler = BombCollisionHandler();
     final explosionHandler = ExplosionCollisionHandler();
     final powerUpHandler = PowerUpCollisionHandler();
+    add(wallHandler);
+    add(bombHandler);
+    add(explosionHandler);
+    add(powerUpHandler);
 
     wallHandler.next = bombHandler;
     bombHandler.next = explosionHandler;
     explosionHandler.next = powerUpHandler;
 
     _collisionHandler = wallHandler;
+  }
+
+  void takeDamage(int damage) {
+    print('Player $id took $damage damage');
+    health -= damage;
+    if (health <= 0) {
+      //todo
+    }
+    gameRef.updatePlayerHealth(id, health);
+  }
+
+  void collectPowerup(PowerUp powerup) {
+    print('Player $id collected powerup');
+    laserBombsCount++;
   }
 
   @override
@@ -118,6 +139,12 @@ class Player extends SpriteAnimationComponent
     }
   }
 
+/*************  ✨ Codeium Command ⭐  *************/
+  /// Updates the animation of the player, based on the velocity.
+  ///
+  /// This checks if the player is moving or not, and in which direction.
+  /// It then sets the correct animation accordingly.
+  /// ****  d90d217c-b786-43e7-8731-e8d9c3d104c5  ******
   void _updateAnimation() {
     String newDirection = _currentDirection;
 
@@ -150,12 +177,15 @@ class Player extends SpriteAnimationComponent
 
   void placeBomb() {
     final bomb = BombFactory.createBomb(
-      BombType.regular,
+      laserBombsCount > 0 ? BombType.laser : BombType.regular,
       position: position.clone(),
       colorScheme: BombColorScheme(colorImplementor),
       primaryModifier: 2,
       secondaryModifier: 1,
     );
+    if (laserBombsCount > 0) {
+      laserBombsCount--;
+    }
     gameRef.add(bomb);
     gameRef.add(
       TimerComponent(

@@ -3,6 +3,7 @@ import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/bomb_factory.dart';
 import 'package:bomberman/game/rendering/color_scheme.dart';
+import 'package:bomberman/game/useless/objects/power_up.dart';
 import 'package:flame/components.dart';
 
 //top level function
@@ -94,11 +95,25 @@ class DestroyableAppearDestructionStrategy implements DestructionStrategy {
       TimerComponent(
         period: 0.5,
         onTick: () {
-          print('XXXX DESTROYABLE APPEAR');
           gameRef.add(clonedDestroyable);
           gameRef.gameMap.grid[gridY][gridX] = clonedDestroyable;
         },
       ),
     );
+  }
+}
+
+class PowerupAppearDestructionStrategy implements DestructionStrategy {
+  @override
+  void destroy(
+    Vector2 position,
+    BombermanGame gameRef,
+    int gridY,
+    int gridX,
+  ) {
+    gameRef.gameMap.remove(gameRef.gameMap.grid[gridY][gridX]!);
+    gameRef.gameMap.grid[gridY][gridX] = null;
+    final powerup = PowerUp(position: position.clone());
+    gameRef.add(powerup);
   }
 }

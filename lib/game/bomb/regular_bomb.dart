@@ -8,6 +8,7 @@ class RegularBomb extends Bomb {
     required super.secondaryModifier,
     required super.colorScheme,
     super.explosionDelay = 3.0,
+    super.damage = 15,
     required super.position,
   })  : strength = primaryModifier * 3,
         branching = secondaryModifier * 1;

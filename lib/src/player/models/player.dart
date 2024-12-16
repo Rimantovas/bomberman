@@ -12,5 +12,7 @@ class PlayerModel with PlayerModelMappable {
   final String sessionId;
   final int positionX;
   final int positionY;
-  PlayerModel(this.id, this.sessionId, this.positionX, this.positionY);
+  final int health;
+  PlayerModel(this.id, this.sessionId, this.positionX, this.positionY,
+      {this.health = 100});
 }

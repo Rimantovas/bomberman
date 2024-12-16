@@ -53,7 +53,7 @@ class CollisionSoundVisitor implements CollisionVisitor {
   @override
   void visitPowerUp(Player player, PowerUp powerUp) {
     if (_canPlaySound('power_up')) {
-      audioManager.playEffect('assets/audio/colide_power_up.mp3');
+      audioManager.playEffect('assets/audio/colide_powerup.mp3');
     }
   }
 }

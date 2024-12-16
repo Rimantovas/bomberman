@@ -10,6 +10,7 @@ class LaserBomb extends Bomb {
     required super.position,
   })  : strength = primaryModifier * 4, // Longer range for laser
         super(
+            damage: 20,
             explosionDelay: secondaryModifier
                 .toDouble()); // Duration based on secondary modifier
 

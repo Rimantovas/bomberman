@@ -1,3 +1,4 @@
+import 'package:bomberman/game/bomb/laser_bomb.dart';
 import 'package:bomberman/game/map/game_map.dart';
 import 'package:bomberman/game/rendering/color_scheme.dart';
 import 'package:flame/game.dart';
@@ -29,8 +30,12 @@ class BombFactory {
         );
       case BombType.remote:
       case BombType.laser:
-        // Implement these bomb types in the future
-        throw UnimplementedError('This bomb type is not yet implemented');
+        return LaserBomb(
+            primaryModifier: primaryModifier,
+            secondaryModifier: secondaryModifier,
+            colorScheme: colorScheme,
+            position: position);
+
       default:
         throw ArgumentError('Unknown BombType: $type');
     }
