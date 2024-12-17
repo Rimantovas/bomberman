@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:bomberman/audio/audio_manager.dart';
+import 'package:bomberman/enums/game_theme.dart';
 import 'package:bomberman/main.dart';
 import 'package:bomberman/menu/bloc/game_settings_bloc.dart';
 import 'package:bomberman/menu/screens/settings_screen.dart';
@@ -32,6 +35,40 @@ class _MainMenuState extends State<MainMenu> {
   void dispose() {
     _audioManager.stop();
     super.dispose();
+  }
+
+  int _getCurrentMemory() => ProcessInfo.currentRss;
+
+  Future<void> compareSettings() async {
+    // Direct GameSettings (Without Proxy)
+    print("=== Without Proxy ===");
+
+    final stopwatch1 = Stopwatch()..start();
+    final memoryBefore1 = _getCurrentMemory();
+    final directSettings = GameSettings();
+
+    directSettings.loadInitialSettings();
+    directSettings.updateSettings(theme: GameTheme.retro, volume: 0.8);
+    final memoryAfter1 = _getCurrentMemory();
+    stopwatch1.stop();
+
+    print('Execution Time: ${stopwatch1.elapsedMilliseconds} ms');
+    print('Memory Usage: ${memoryAfter1 - memoryBefore1} bytes\n');
+
+    // PersistentGameSettings (With Proxy)
+    print("=== With Proxy ===");
+
+    final stopwatch2 = Stopwatch()..start();
+    final memoryBefore2 = _getCurrentMemory();
+    final proxySettings = PersistentGameSettings(GameSettings());
+
+    await proxySettings.loadInitialSettings();
+    proxySettings.updateSettings(theme: GameTheme.retro, volume: 0.8);
+    final memoryAfter2 = _getCurrentMemory();
+    stopwatch2.stop();
+
+    print('Execution Time: ${stopwatch2.elapsedMilliseconds} ms');
+    print('Memory Usage: ${memoryAfter2 - memoryBefore2} bytes\n');
   }
 
   @override
