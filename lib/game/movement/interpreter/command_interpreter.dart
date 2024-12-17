@@ -1,9 +1,7 @@
 // Tokenizer class to break down the command string into individual tokens
-import 'package:bomberman/game/facade/game_facade.dart';
 import 'package:bomberman/game/movement/commands/move_command.dart';
 import 'package:bomberman/game/movement/moving_state.dart';
 import 'package:bomberman/game/player/player.dart';
-import 'package:flutter/services.dart';
 
 //* [PATTERN] Interpreter Pattern
 class CommandInterpreter {

@@ -3,6 +3,7 @@ import 'package:bomberman/game/board_object/board_object.dart';
 import 'package:bomberman/game/bomb/bomb.dart';
 import 'package:bomberman/game/bomb/explosion.dart';
 import 'package:bomberman/game/player/player.dart';
+import 'package:bomberman/game/sound/sound_effect.dart';
 import 'package:bomberman/game/useless/objects/power_up.dart';
 
 //* [Pattern] Visitor Pattern
@@ -39,21 +40,24 @@ class CollisionSoundVisitor implements CollisionVisitor {
   @override
   void visitBomb(Player player, Bomb bomb) {
     if (_canPlaySound('bomb')) {
-      audioManager.playEffect('assets/audio/colide_bomb.mp3');
+      SoundEffect(assetPath: 'assets/audio/colide_bomb.mp3').play();
     }
   }
 
   @override
   void visitExplosion(Player player, Explosion explosion) {
     if (_canPlaySound('explosion')) {
-      audioManager.playEffect('assets/audio/colide_explosion.mp3');
+      SoundEffect(assetPath: 'assets/audio/colide_explosion.mp3').play();
     }
   }
 
   @override
   void visitPowerUp(Player player, PowerUp powerUp) {
     if (_canPlaySound('power_up')) {
-      audioManager.playEffect('assets/audio/colide_powerup.mp3');
+      SoundGroup(assetPath: '', audios: [
+        SoundEffect(assetPath: 'assets/audio/colide_powerup.mp3'),
+        SoundEffect(assetPath: 'assets/audio/yay.mp3'),
+      ]).play();
     }
   }
 }

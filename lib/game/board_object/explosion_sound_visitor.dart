@@ -1,10 +1,10 @@
-import 'package:bomberman/audio/audio_manager.dart';
 import 'package:bomberman/game.dart';
 import 'package:bomberman/game/board_object/bedrock.dart';
 import 'package:bomberman/game/board_object/board_object.dart';
 import 'package:bomberman/game/board_object/board_object_visitor.dart';
 import 'package:bomberman/game/board_object/destroyable.dart';
 import 'package:bomberman/game/board_object/ground.dart';
+import 'package:bomberman/game/sound/sound_effect.dart';
 
 //* [Pattern] Visitor Pattern
 class ExplosionSoundVisitor implements BoardObjectVisitor {
@@ -18,7 +18,6 @@ class ExplosionSoundVisitor implements BoardObjectVisitor {
     } else if (object is Ground) {
       assetPath = 'assets/audio/ground_sound.mp3';
     }
-
-    AudioManager().playEffect(assetPath);
+    SoundEffect(assetPath: assetPath).play();
   }
 }
