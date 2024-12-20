@@ -4,6 +4,7 @@ import 'package:bomberman/menu/bloc/game_settings_bloc.dart';
 import 'package:bomberman/menu/screens/menu_screen.dart';
 import 'package:bomberman/src/session/bloc/session_bloc.dart';
 import 'package:bomberman/utils/app_asset.dart';
+import 'package:bomberman/utils/http/dio_client.dart';
 import 'package:bomberman/utils/http/http_client.dart';
 import 'package:bomberman/utils/http/http_package_client.dart';
 import 'package:bomberman/utils/key_value/key_value_storage_service.dart';
@@ -22,7 +23,7 @@ late final HttpClient httpClient;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  httpClient = HttpPackageClient(baseUrl: 'http://localhost:3000');
+  httpClient = DioClient(baseUrl: 'http://172.20.10.10:3000');
   // httpClient = DioClient(
   //   baseUrl: 'http://localhost:3000',
   // );

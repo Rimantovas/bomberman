@@ -20,11 +20,12 @@ class WebSocketService {
   }
 
   void _initializeSocket() {
-    _socket = io.io('ws://localhost:7777',
+    _socket = io.io('ws://172.20.10.10:7777',
         io.OptionBuilder().setTransports(['websocket']).build());
 
     _socket.on('player_moved', (data) {
       final json = data as Map<String, dynamic>;
+      print('XXX $data');
       _notifyPlayerMoved(
         json['id'],
         json['position_x'],

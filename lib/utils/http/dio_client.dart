@@ -39,7 +39,12 @@ class DioClient implements HttpClient {
   @override
   Future<APIResponse<dynamic>> patch(String path, {dynamic data}) async {
     try {
-      final response = await adaptee.patch(path, data: data);
+      final playerId = (data as Map<String, dynamic>)['playerId'];
+      final response = await adaptee.patch(path,
+          data: data,
+          options: dio.Options(headers: {
+            'player-id': playerId,
+          }));
       return APIResponse(data: response.data, statusCode: response.statusCode);
     } catch (e) {
       throw APIResponse(errorMessage: e.toString(), statusCode: 500);
@@ -58,6 +63,7 @@ class DioClient implements HttpClient {
 
   @override
   void addInterceptor(HttpInterceptor interceptor) {
+    print('XXX ADD ');
     adaptee.interceptors.add(adapteeInterceptorAdapter(interceptor));
   }
 }

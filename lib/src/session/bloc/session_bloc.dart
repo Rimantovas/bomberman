@@ -43,7 +43,7 @@ class SessionBloc extends Cubit<SessionState> {
         initialPlayers: response.players,
         isLoading: false,
       ));
-
+      print('playerID: ${response.playerId}');
       httpClient.addInterceptor(PlayerIdHeaderIntercepter(response.playerId));
       return response;
     } catch (e) {
